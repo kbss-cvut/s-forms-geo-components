@@ -1,0 +1,64 @@
+{
+  "name": "s-forms-geo-components",
+  "version": "0.1.6",
+  "private": true,
+  "scripts": {
+    "dev": "start-storybook -p 6006",
+    "build": "microbundle --jsx React.createElement",
+    "build:lib": "npm run build && npm pack",
+    "build-storybook": "build-storybook"
+  },
+  "engines": {
+    "node": ">=14.17.1"
+  },
+  "type": "module",
+  "source": "src/lib.js",
+  "exports": "./dist/s-forms-geo-components.modern.js",
+  "module": "./dist/s-forms-geo-components.js",
+  "unpkg": "./dist/s-forms-geo-components.umd.js",
+  "targets": {
+    "browser": {
+      "distDir": "dist",
+      "outputFormat": "commonjs",
+      "optimize": false
+    }
+  },
+  "files": [
+    "src/",
+    "dist/"
+  ],
+  "dependencies": {
+    "intelligent-tree-select": "~0.8.3"
+  },
+  "peerDependencies": {
+    "s-forms": "https://kbss.felk.cvut.cz/dist/s-forms-0.3.5.tgz"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.17.7",
+    "@babel/plugin-proposal-class-properties": "^7.8.3",
+    "@babel/plugin-proposal-export-default-from": "^7.8.3",
+    "@babel/plugin-transform-runtime": "^7.9.6",
+    "@babel/preset-env": "^7.9.6",
+    "@babel/preset-react": "^7.9.4",
+    "@storybook/addon-actions": "^6.4.19",
+    "@storybook/addon-essentials": "^6.4.19",
+    "@storybook/addon-interactions": "^6.4.19",
+    "@storybook/addon-links": "^6.4.19",
+    "@storybook/react": "^6.4.19",
+    "@storybook/testing-library": "^0.0.9",
+    "babel-loader": "^8.2.3",
+    "bootstrap": "^4.6.0",
+    "classnames": "^2.2.6",
+    "jsonld": "^0.4.12",
+    "jsonld-utils": "https://kbss.felk.cvut.cz/dist/jsonld-utils-0.0.11.tgz",
+    "microbundle": "^0.14.2",
+    "prettier": "2.6.0",
+    "prop-types": "^15.7.2",
+    "query-string": "^6.13.5",
+    "react": "^17.0.2",
+    "react-bootstrap": "1.0.1",
+    "react-dom": "^17.0.2",
+    "s-forms": "https://kbss.felk.cvut.cz/dist/s-forms-0.3.5.tgz",
+    "typescript": "^4.6.2"
+  }
+}
