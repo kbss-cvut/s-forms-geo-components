@@ -272,7 +272,8 @@
         "parent-section-1590",
         "test-section-666",
         "non-answerable-section-with-advanced-switch",
-        "answerable-section-with-advanced-switch"
+        "answerable-section-with-advanced-switch",
+        "nice-layout"
       ],
       "has-layout-class": "form"
     },
@@ -390,7 +391,7 @@
       "has-layout-class": "section",
       "has-preceding-question": "cena-6557",
       "label": "Vlastník"
-    },
+    },    
     {
       "@id": "sectionfoo-1592",
       "@type": "doc:question",
@@ -606,6 +607,13 @@
       ],
       "label": "Simple section with advanced switch",
       "source" : "https://slovník.gov.cz/generický/množství/pojem/má-jednotku"
+    },
+    {
+      "@id": "nice-layout",
+      "@type": "doc:question",
+      "has-layout-class" : [ "nice", "text" ],
+      "has_related_question": [],
+      "label": "Simple section with nice layout"
     },
     {
       "@id": "show-advanced-question:-test-advanced-switch-na",

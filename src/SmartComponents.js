@@ -1,5 +1,4 @@
-import CompositeQuestion from "./components/CompositeQuestion";
-import JsonLdUtils from "jsonld-utils";
+import CompositeQuestion from "./components/CompositeQuestion"
 import Constants from "./Constants";
 import {Constants as SConstants, FormUtils} from "s-forms";
 import WizardStepComponent from "./components/WizardStepComponent";
@@ -7,6 +6,7 @@ import QuestionWithUnit from "./components/QuestionWithUnit";
 import NullQuestion from "./components/NullQuestion";
 import Utils from "./Utils";
 import SectionComponent from "./components/SectionComponent";
+import NiceComponent from "./components/NiceComponent";
 
 export default class SmartComponents {
 
@@ -42,6 +42,10 @@ export default class SmartComponents {
       {
         component: CompositeQuestion,
         mapRule: CompositeQuestion.mappingRule
+      },
+      {
+        component: NiceComponent,
+        mapRule: NiceComponent.mappingRule
       },
       {
         component: NullQuestion,

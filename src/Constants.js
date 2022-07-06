@@ -11,6 +11,7 @@ export default class Constants {
     static HAS_IDENTIFYING_QUESTION = 'http://onto.fel.cvut.cz/ontologies/form/has-identifying-question';
     static HAS_NON_SELECTABLE_VALUE = 'http://onto.fel.cvut.cz/ontologies/form/has-non-selectable-value';
 
+    static LAYOUT_TYPE = 'nice';
     static LAYOUT_TYPE_QUESTION = 'type-question';
     static LAYOUT_STICKY = 'sticky';
 

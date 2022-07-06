@@ -126,3 +126,11 @@
     top: 0;
     z-index: 3;
 }
+
+.nice-layout {    
+    color: green;
+    background-color: lightgoldenrodyellow;
+    padding: 3px 0 0 3px;
+    border-radius: 5px;
+    border: 2px solid darkgreen;
+}
