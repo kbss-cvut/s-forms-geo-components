@@ -6,7 +6,7 @@ import {
   FormUtils,
   FormQuestionsContext,
   QuestionStatic
-} from 's-forms';
+} from '@kbss-cvut/s-forms';
 import {Card} from 'react-bootstrap';
 import JsonLdUtils from 'jsonld-utils';
 import ShowAdvancedSwitch from "./ShowAdvancedSwitch";
@@ -102,10 +102,10 @@ export default class WizardStepComponent extends WizardStep {
 
   _renderIdentifierText() {
     return (
-      <SectionIdentifier question={this.props.step}
-                         prefix="("
-                         suffix=")"
-      />
+        <SectionIdentifier question={this.props.step}
+                           prefix="("
+                           suffix=")"
+        />
     );
   }
 
@@ -117,11 +117,11 @@ export default class WizardStepComponent extends WizardStep {
     }
 
     return (
-      <ShowAdvancedSwitch
-        question={this.props.step}
-        onChange={this.onChange}
-        index={this.props.stepIndex}
-      />
+        <ShowAdvancedSwitch
+            question={this.props.step}
+            onChange={this.onChange}
+            index={this.props.stepIndex}
+        />
     );
   }
 
@@ -141,31 +141,31 @@ export default class WizardStepComponent extends WizardStep {
 
 
     return (
-      <div className="wizard-step">
-        <Card ref={this.card} className="wizard-step-content" >
-          <Card.Header ref={this.cardHeader}
-                       className={headerClass}
-                       style={headerStyle}
-                       as="h6"
-                       id={this.props.step['@id']}
-                       onMouseEnter={this._onMouseEnterHandler}
-                       onMouseLeave={this._onMouseLeaveHandler}
-          >
-            {JsonLdUtils.getLocalized(this.props.step[JsonLdUtils.RDFS_LABEL], this.props.options.intl)}
-            {QuestionStatic.renderIcons(this.props.step, this.props.options, this.onCommentChange, this.state.showIcon)}
+        <div className="wizard-step">
+          <Card ref={this.card} className="wizard-step-content" >
+            <Card.Header ref={this.cardHeader}
+                         className={headerClass}
+                         style={headerStyle}
+                         as="h6"
+                         id={this.props.step['@id']}
+                         onMouseEnter={this._onMouseEnterHandler}
+                         onMouseLeave={this._onMouseLeaveHandler}
+            >
+              {JsonLdUtils.getLocalized(this.props.step[JsonLdUtils.RDFS_LABEL], this.props.options.intl)}
+              {QuestionStatic.renderIcons(this.props.step, this.props.options, this.onCommentChange, this.state.showIcon)}
 
-            {this._renderIdentifierText()}
-            {this._renderShowAdvanced()}
+              {this._renderIdentifierText()}
+              {this._renderShowAdvanced()}
 
-          </Card.Header>
-          <Card.Body className={categoryClass} style={{marginTop: this.state.headerHeight}}>
-            <Question question={this.props.step} onChange={this.onChange} withoutCard={true}
-                      index={this.props.stepIndex}/>
-          </Card.Body>
-        </Card>
+            </Card.Header>
+            <Card.Body className={categoryClass} style={{marginTop: this.state.headerHeight}}>
+              <Question question={this.props.step} onChange={this.onChange} withoutCard={true}
+                        index={this.props.stepIndex}/>
+            </Card.Body>
+          </Card>
 
-        {this.props.options.wizardStepButtons && this._renderWizardStepButtons()}
-      </div>
+          {this.props.options.wizardStepButtons && this._renderWizardStepButtons()}
+        </div>
     );
 
   }

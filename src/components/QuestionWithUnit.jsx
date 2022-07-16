@@ -1,5 +1,5 @@
 import React from 'react';
-import { Question, Answer, Constants as SConstants, FormQuestionsContext } from 's-forms';
+import { Question, Answer, FormQuestionsContext } from '@kbss-cvut/s-forms';
 import classNames from 'classnames';
 import PropTypes from 'prop-types';
 import Constants from "../Constants";
@@ -43,8 +43,8 @@ class _QuestionWithUnit extends Question {
 
     const answers = this._getAnswers();
     const cls = classNames(
-      Question._getQuestionCategoryClass(question),
-      'answer'
+        Question._getQuestionCategoryClass(question),
+        'answer'
     );
 
     return [
@@ -54,12 +54,12 @@ class _QuestionWithUnit extends Question {
                onMouseEnter={this._onMouseEnterHandler}
                onMouseLeave={this._onMouseLeaveHandler}>
             <Answer
-              index={0}
-              answer={answers[0]}
-              question={question}
-              onChange={this.onAnswerChange}
-              onCommentChange={this.onCommentChange}
-              showIcon={this.state.showIcon}
+                index={0}
+                answer={answers[0]}
+                question={question}
+                onChange={this.handleAnswerChange}
+                onCommentChange={this.handleCommentChange}
+                showIcon={this.state.showIcon}
             />
             {this._renderUnits()}
             {this._renderPrefixes()}
@@ -83,7 +83,7 @@ const QuestionWithUnit = (props) => {
   const formData = formQuestionsContext.getData();
 
   return (
-    <_QuestionWithUnit formData={formData} {...props} />
+      <_QuestionWithUnit formData={formData} {...props} />
   );
 };
 

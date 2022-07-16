@@ -1,5 +1,5 @@
 import React from 'react';
-import {Question, FormUtils, Answer, ConfigurationContext} from 's-forms';
+import {Question, FormUtils, Answer, ConfigurationContext, Constants as SConstants} from '@kbss-cvut/s-forms';
 import classNames from 'classnames';
 import ShowAdvancedSwitch from "./ShowAdvancedSwitch";
 import TypeQuestionAnswer from "./TypeQuestionAnswer";
@@ -16,10 +16,10 @@ export default class SectionComponent extends Question {
     this.toggleCollapse = (e) => {
       let classList = e.target.classList;
       if (!classList.contains('answer-content') && !classList.contains('card-header')
-        && !classList.contains('answer') && !classList.contains('show-advanced-switch')
-        && !classList.contains('d-inline') && !classList.contains('caret-square-down')
-        && !classList.contains('form-label')
-        && !(classList.length === 0)
+          && !classList.contains('answer') && !classList.contains('show-advanced-switch')
+          && !classList.contains('d-inline') && !classList.contains('caret-square-down')
+          && !classList.contains('form-label')
+          && !(classList.length === 0)
       ) {
         return;
       }
@@ -27,13 +27,17 @@ export default class SectionComponent extends Question {
     }
   }
 
+  onSubQuestionChange = (subQuestionIndex, change) => {
+    this._handleChange(SConstants.HAS_SUBQUESTION, subQuestionIndex, change);
+  };
+
   _renderIdentifierText() {
     return (
-      <SectionIdentifier
-        question={this.props.question}
-        prefix="("
-        suffix=")"
-      />
+        <SectionIdentifier
+            question={this.props.question}
+            prefix="("
+            suffix=")"
+        />
     );
   }
 
@@ -45,16 +49,16 @@ export default class SectionComponent extends Question {
     }
 
     return (
-      <ShowAdvancedSwitch {...this.props} />
+        <ShowAdvancedSwitch {...this.props} />
     );
   }
 
   renderHeaderExtension() {
     return (
-      <>
-        {this._renderIdentifierText()}
-        {this.state.expanded && this._renderShowAdvanced()}
-      </>
+        <>
+          {this._renderIdentifierText()}
+          {this.state.expanded && this._renderShowAdvanced()}
+        </>
     );
   }
 
@@ -71,8 +75,8 @@ export default class SectionComponent extends Question {
       index: index,
       answer: answer,
       question: question,
-      onChange: this.onAnswerChange,
-      onCommentChange: this.onCommentChange,
+      onChange: this.handleAnswerChange,
+      onCommentChange: this.handleCommentChange,
       showIcon: this.state.showIcon,
       onSubChange: this.onSubQuestionChange,
       isInSectionHeader: true
@@ -91,38 +95,38 @@ export default class SectionComponent extends Question {
 
   renderAnswers() {
     const question = this.props.question,
-      children = [],
-      answers = this._getAnswers();
+        children = [],
+        answers = this._getAnswers();
     let cls;
     let isTextarea;
 
     for (let i = 0, len = answers.length; i < len; i++) {
       isTextarea =
-        FormUtils.isTextarea(question, FormUtils.resolveValue(answers[i])) ||
-        FormUtils.isSparqlInput(question) ||
-        FormUtils.isTurtleInput(question);
+          FormUtils.isTextarea(question, FormUtils.resolveValue(answers[i])) ||
+          FormUtils.isSparqlInput(question) ||
+          FormUtils.isTurtleInput(question);
       cls = classNames(
-        'answer',
-        Question._getQuestionCategoryClass(question),
-        Question.getEmphasizedOnRelevantClass(question)
+          'answer',
+          Question._getQuestionCategoryClass(question),
+          Question.getEmphasizedOnRelevantClass(question)
       );
       children.push(
-        <div
-          key={'row-item-' + i}
-          className={cls}
-          id={question['@id']}
-          onMouseEnter={this._onMouseEnterHandler}
-          onMouseLeave={this._onMouseLeaveHandler}
-        >
-          <div className="answer-content" style={this._getAnswerWidthStyle()}>
-            {this._renderAnswer(i, answers[i])}
-            {this._renderIdentifierText()}
-          </div>
-          {this._renderUnits()}
-          {this._renderPrefixes()}
+          <div
+              key={'row-item-' + i}
+              className={cls}
+              id={question['@id']}
+              onMouseEnter={this._onMouseEnterHandler}
+              onMouseLeave={this._onMouseLeaveHandler}
+          >
+            <div className="answer-content" style={this._getAnswerWidthStyle()}>
+              {this._renderAnswer(i, answers[i])}
+              {this._renderIdentifierText()}
+            </div>
+            {this._renderUnits()}
+            {this._renderPrefixes()}
 
-          {this._renderShowAdvanced()}
-        </div>
+            {this._renderShowAdvanced()}
+          </div>
       );
     }
     return children;

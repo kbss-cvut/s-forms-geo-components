@@ -5,7 +5,7 @@ import {
   QuestionStatic,
   Constants as SConstants,
   ConfigurationContext,
-} from 's-forms';
+} from '@kbss-cvut/s-forms';
 import Constants from "../Constants";
 import PropTypes from "prop-types";
 import {IntelligentTreeSelect} from "intelligent-tree-select";
@@ -32,7 +32,7 @@ export default class TypeQuestionAnswer extends React.Component {
     }
   }
 
-  _onChange = value => {
+  _handleChange = value => {
 
     if (!value) {
       value = [];
@@ -311,20 +311,20 @@ export default class TypeQuestionAnswer extends React.Component {
     }
 
     return (
-      <IntelligentTreeSelect
-        value={selectedValue}
-        valueKey="value"
-        labelKey="label"
-        childrenKey="children"
-        options={Object.values(this.state.tree)}
-        expanded={true}
-        closeOnSelect={this.state.singleSelect}
-        onChange={this._onChange}
-        multi={!this.state.singleSelect}
-        showSettings={false}
-        renderAsTree={true}
-        optionLeftOffset={5}
-      />
+        <IntelligentTreeSelect
+            value={selectedValue}
+            valueKey="value"
+            labelKey="label"
+            childrenKey="children"
+            options={Object.values(this.state.tree)}
+            expanded={true}
+            closeOnSelect={this.state.singleSelect}
+            onChange={this._handleChange}
+            multi={!this.state.singleSelect}
+            showSettings={false}
+            renderAsTree={true}
+            optionLeftOffset={5}
+        />
     );
 
   }
@@ -354,20 +354,20 @@ export default class TypeQuestionAnswer extends React.Component {
 
     if (this.props.isInSectionHeader) {
       return (
-        <div className="type-answer-group">
-          {this._renderLabel()}
-          {QuestionStatic.renderIcons(question, options, onCommentChange, showIcon)}
-          {this._renderSelect()}
-        </div>
+          <div className="type-answer-group">
+            {this._renderLabel()}
+            {QuestionStatic.renderIcons(question, options, onCommentChange, showIcon)}
+            {this._renderSelect()}
+          </div>
       );
     }
 
     return (
-      <FormGroup>
-        {this._renderLabel()}
-        {QuestionStatic.renderIcons(question, options, onCommentChange,showIcon)}
-        {this._renderSelect()}
-      </FormGroup>
+        <FormGroup>
+          {this._renderLabel()}
+          {QuestionStatic.renderIcons(question, options, onCommentChange,showIcon)}
+          {this._renderSelect()}
+        </FormGroup>
     );
   }
 }

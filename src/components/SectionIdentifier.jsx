@@ -1,6 +1,6 @@
 import React from 'react';
 import PropTypes from "prop-types";
-import {FormUtils, Constants as SConstants, JsonLdObjectMap, ConfigurationContext} from "s-forms";
+import {FormUtils, Constants as SConstants, JsonLdObjectMap, ConfigurationContext} from "@kbss-cvut/s-forms";
 import Constants from "../Constants";
 import Utils from "../Utils";
 import JsonLdUtils from "jsonld-utils";
@@ -82,7 +82,7 @@ export default class SectionIdentifier extends React.Component {
     const text = this._getLabelText();
     if (text) {
       return (
-        <span className="section-identifier">{this.props.prefix}{text}{this.props.suffix}</span>
+          <span className="section-identifier">{this.props.prefix}{text}{this.props.suffix}</span>
       );
     }
 
@@ -91,4 +91,3 @@ export default class SectionIdentifier extends React.Component {
 
 
 }
-

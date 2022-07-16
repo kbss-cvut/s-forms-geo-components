@@ -1,5 +1,5 @@
-import React, { useRef, useState } from "react";
-import SForms, { Constants, IntlContextProvider } from "s-forms";
+import React, { useRef } from "react";
+import SForms, { Constants, IntlContextProvider } from "@kbss-cvut/s-forms";
 import SmartComponents from "../SmartComponents";
 import exampleForm from "./assets/example_form.json";
 import exampleFormTC from "./assets/example_turisticky_cil.json";
@@ -64,21 +64,21 @@ const Template: ComponentStory<typeof SForms> = (args) => {
 
   const fetchTypeAheadValues = (query) => {
     return new Promise((resolve) =>
-      setTimeout(() => resolve(possibleValues), 1500)
+        setTimeout(() => resolve(possibleValues), 1500)
     );
   };
 
   return (
-    <IntlContextProvider locale={options.intl.locale}>
-      <SForms
-        options={options}
-        ref={refForm}
-        form={exampleForm}
-        fetchTypeAheadValues={fetchTypeAheadValues}
-        componentMapRules={componentMapping}
-        {...args}
-      />
-    </IntlContextProvider>
+      <IntlContextProvider locale={options.intl.locale}>
+        <SForms
+            options={options}
+            ref={refForm}
+            form={exampleForm}
+            fetchTypeAheadValues={fetchTypeAheadValues}
+            componentMapRules={componentMapping}
+            {...args}
+        />
+      </IntlContextProvider>
   );
 };
 

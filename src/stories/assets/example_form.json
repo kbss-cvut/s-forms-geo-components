@@ -611,7 +611,7 @@
     {
       "@id": "nice-layout",
       "@type": "doc:question",
-      "has-layout-class" : [ "nice", "text" ],
+      "has-layout-class" : [ "nice" ],
       "has_related_question": [],
       "label": "Simple section with nice layout"
     },

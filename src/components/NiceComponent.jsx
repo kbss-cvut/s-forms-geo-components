@@ -6,7 +6,7 @@ import {
     Constants as SFormsConstants,
     ConfigurationContext,
     Answer
-} from 's-forms';
+} from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import classNames from 'classnames';
 
@@ -20,28 +20,6 @@ export default class NiceComponent extends Question {
         console.log("Nice component init");
     }
 
-    _renderIdentifierText() {
-        return (
-            <SectionIdentifier
-                question={this.props.question}
-                prefix="("
-                suffix=")"
-            />
-        );
-    }
-
-    _renderShowAdvanced() {
-        const question = this.props.question;
-
-        if (!ShowAdvancedSwitch.mappingRule(question)) {
-            return null;
-        }
-
-        return (
-            <ShowAdvancedSwitch {...this.props} />
-        );
-    }
-
     _renderAnswer(index, answer) {
         const question = this.props.question;
 
@@ -51,8 +29,8 @@ export default class NiceComponent extends Question {
             index: index,
             answer: answer,
             question: question,
-            onChange: this.onAnswerChange,
-            onCommentChange: this.onCommentChange,
+            onChange: this.handleAnswerChange,
+            onCommentChange: this.handleCommentChange,
             showIcon: this.state.showIcon,
             onSubChange: this.onSubQuestionChange,
             isInSectionHeader: true
