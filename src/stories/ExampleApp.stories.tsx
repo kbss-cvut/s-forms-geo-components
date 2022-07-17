@@ -1,12 +1,13 @@
 import React, { useRef } from "react";
 import SForms, { Constants, IntlContextProvider } from "@kbss-cvut/s-forms";
-import SmartComponents from "../SmartComponents";
 import exampleForm from "./assets/example_form.json";
 import exampleFormTC from "./assets/example_turisticky_cil.json";
+import touristForm from "./assets/example_tourist_destination_form_with_location.json";
 import possibleValues from "./assets/possibleValues.json";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
+import GeoComponents from "../GeoComponents";
 
-const componentMapping = SmartComponents.getComponentMapping();
+const componentMapping = GeoComponents.getComponentMapping();
 
 const modalProps = {
   onHide: () => {},
@@ -90,4 +91,10 @@ export const TouristDestination1 = Template.bind({});
 TouristDestination1.args = {
   options: options,
   form: exampleFormTC,
+};
+
+export const TouristDestinationWithGeolocation = Template.bind({});
+TouristDestinationWithGeolocation.args = {
+  options: options,
+  form: touristForm
 };
