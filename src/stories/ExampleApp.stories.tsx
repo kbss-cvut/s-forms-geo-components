@@ -56,14 +56,14 @@ const options = {
 };
 
 export default {
-  title: "SForms Smart Component",
+  title: "SForms Geo Component",
   component: SForms,
 } as ComponentMeta<typeof SForms>;
 
 const Template: ComponentStory<typeof SForms> = (args) => {
   const refForm = useRef();
 
-  const fetchTypeAheadValues = (query) => {
+  const fetchTypeAheadValues = () => {
     return new Promise((resolve) =>
         setTimeout(() => resolve(possibleValues), 1500)
     );

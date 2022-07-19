@@ -8,6 +8,7 @@ import Utils from "./Utils";
 import SectionComponent from "./components/SectionComponent";
 import NiceComponent from "./components/NiceComponent";
 import GeoComponent from "./components/GeoComponent";
+import LongitudeComponent from "./components/LongitudeComponent";
 
 export default class GeoComponents {
 
@@ -51,6 +52,10 @@ export default class GeoComponents {
       {
         component: GeoComponent,
         mapRule: GeoComponent.mappingRule
+      },
+      {
+        component: LongitudeComponent,
+        mapRule: LongitudeComponent.mappingRule
       },
       {
         component: NullQuestion,
