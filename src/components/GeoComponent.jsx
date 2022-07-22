@@ -1,5 +1,4 @@
 import React from 'react';
-import JsonLdUtils from 'jsonld-utils';
 import {
     Question,
     FormUtils,
@@ -9,14 +8,12 @@ import {
 import Constants from '../Constants';
 import classNames from 'classnames';
 import Utils from "../Utils";
-import PopupExample from "./MapComponent";
+import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import LongitudeComponent from "./LongitudeComponent";
 import LatitudeComponent from "./LatitudeComponent";
 
 class _GeoComponent extends Question {
-
-    static mappingRule = q => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE);
 
     constructor(props) {
         super(props);
@@ -27,12 +24,21 @@ class _GeoComponent extends Question {
         return super._getAnswerWidthStyle();
     }
 
+    getLongitudeProps(question) {
+        return {
+            question: question.q,
+            index: question.index,
+            collapsible: this.props.collapsible,
+            formData: this.props.formData,
+            onChange: this.props.onChange,
+            withoutCard: this.props.withoutCard
+        }
+    }
+
     renderAnswers() {
         const question = this.props.question;
         let cls;
 
-        //const parent = Utils.findParent(this.props, question["@id"]);
-        console.log(this.props.formData);
         const parent = Utils.findParent(this.props.formData.root, question['@id']);
         if (!parent) {
             return null;
@@ -46,8 +52,6 @@ class _GeoComponent extends Question {
             return null;
         }
 
-        console.log(longitudeQuestion);
-
         const answers = this._getAnswers();
         cls = classNames(
             'answer',
@@ -56,11 +60,11 @@ class _GeoComponent extends Question {
         );
         return [
             <div>
-            <PopupExample/>
+            <MapComponent/>
                     { Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
                     &&
                         <div className="base-question">
-                    <LongitudeComponent question={longitudeQuestion.q} index={longitudeQuestion.index}/>
+                    <LongitudeComponent {...this.getLongitudeProps(longitudeQuestion)}/>
                         </div>
                     }
                 <div className="unit-question">
@@ -68,7 +72,6 @@ class _GeoComponent extends Question {
                 </div>
             </div>
         ];
-        //return children;
     }
 }
 
@@ -78,7 +81,6 @@ _GeoComponent.contextType = ConfigurationContext;
 const GeoComponent = (props) => {
     const formQuestionsContext = React.useContext(FormQuestionsContext);
     const formData = formQuestionsContext.getData();
-
 
     return (
         <_GeoComponent formData={formData} {...props} />

@@ -1,12 +1,10 @@
 import React from 'react';
-import JsonLdUtils from 'jsonld-utils';
 import {
     Question,
     FormUtils,
     ConfigurationContext,
     Answer, Constants as SConstants
 } from '@kbss-cvut/s-forms';
-import Constants from '../Constants';
 import classNames from 'classnames';
 
 
@@ -14,9 +12,7 @@ interface Props {
     question: object
 }
 
-class LatitudeComponent extends Question {
-
-    //static mappingRule = (q: Question) => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE);
+export default class LatitudeComponent extends Question {
 
     constructor(props: Props) {
         super(props);
@@ -58,4 +54,3 @@ class LatitudeComponent extends Question {
 }
 
 LatitudeComponent.contextType = ConfigurationContext;
-export default LatitudeComponent;

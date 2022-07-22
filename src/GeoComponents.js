@@ -52,7 +52,7 @@ export default class GeoComponents {
       },
       {
         component: GeoComponent,
-        mapRule: q => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE)
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE)
       },
       /*{
         component: LongitudeComponent,
