@@ -4,13 +4,17 @@ import {
     Question,
     FormUtils,
     ConfigurationContext,
-    Answer
+    Answer, FormQuestionsContext
 } from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import classNames from 'classnames';
+import Utils from "../Utils";
+import PopupExample from "./MapComponent";
+import PropTypes from "prop-types";
+import LongitudeComponent from "./LongitudeComponent";
+import LatitudeComponent from "./LatitudeComponent";
 
-
-export default class GeoComponent extends Question {
+class _GeoComponent extends Question {
 
     static mappingRule = q => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE);
 
@@ -19,61 +23,66 @@ export default class GeoComponent extends Question {
         console.log("Geo component init");
     }
 
-    _renderAnswer(index, answer) {
-        const question = this.props.question;
-
-        let component = Answer;
-
-        return React.createElement(component, {
-            index: index,
-            answer: answer,
-            question: question,
-            onChange: this.handleAnswerChange,
-            onCommentChange: this.handleCommentChange,
-            showIcon: this.state.showIcon,
-            onSubChange: this.onSubQuestionChange,
-            isInSectionHeader: true
-        });
-    }
-
     _getAnswerWidthStyle() {
         return super._getAnswerWidthStyle();
     }
 
     renderAnswers() {
-        const question = this.props.question,
-            children = [],
-            answers = this._getAnswers();
+        const question = this.props.question;
         let cls;
-        let isTextarea;
 
-        for (let i = 0, len = answers.length; i < len; i++) {
-            isTextarea =
-                FormUtils.isTextarea(question, FormUtils.resolveValue(answers[i])) ||
-                FormUtils.isSparqlInput(question) ||
-                FormUtils.isTurtleInput(question);
-            cls = classNames(
-                'answer',
-                'nice-layout',
-                Question._getQuestionCategoryClass(question),
-                Question.getEmphasizedOnRelevantClass(question)
-            );
-            children.push(
-                <div
-                    key={'row-item-' + i}
-                    className={cls}
-                    id={question['@id']}
-                    onMouseEnter={this._onMouseEnterHandler}
-                    onMouseLeave={this._onMouseLeaveHandler}
-                >
-                    <div className="answer-content" style={this._getAnswerWidthStyle()}>
-                        {this._renderAnswer(i, answers[i])}
-                    </div>
-                </div>
-            );
+        //const parent = Utils.findParent(this.props, question["@id"]);
+        console.log(this.props.formData);
+        const parent = Utils.findParent(this.props.formData.root, question['@id']);
+        if (!parent) {
+            return null;
         }
-        return children;
+
+        const longitudeQuestionId = question[Constants.HAS_PRECEDING_QUESTION]['@id'];
+        const longitudeQuestion = Utils.findDirectChild(parent, longitudeQuestionId);
+
+        if (!longitudeQuestion) {
+            console.error('question with preceding question: cannot find question ' + longitudeQuestionId);
+            return null;
+        }
+
+        console.log(longitudeQuestion);
+
+        const answers = this._getAnswers();
+        cls = classNames(
+            'answer',
+            Question._getQuestionCategoryClass(question),
+            Question.getEmphasizedOnRelevantClass(question)
+        );
+        return [
+            <div>
+            <PopupExample/>
+                    { Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
+                    &&
+                        <div className="base-question">
+                    <LongitudeComponent question={longitudeQuestion.q} index={longitudeQuestion.index}/>
+                        </div>
+                    }
+                <div className="unit-question">
+                    <LatitudeComponent {...this.props}/>
+                </div>
+            </div>
+        ];
+        //return children;
     }
 }
 
-GeoComponent.contextType = ConfigurationContext;
+_GeoComponent.propTypes.formData = PropTypes.object;
+_GeoComponent.contextType = ConfigurationContext;
+
+const GeoComponent = (props) => {
+    const formQuestionsContext = React.useContext(FormQuestionsContext);
+    const formData = formQuestionsContext.getData();
+
+
+    return (
+        <_GeoComponent formData={formData} {...props} />
+    );
+};
+
+export default GeoComponent;

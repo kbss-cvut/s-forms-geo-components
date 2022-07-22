@@ -28,7 +28,9 @@
     "dist/"
   ],
   "dependencies": {
-    "intelligent-tree-select": "~0.8.3"
+    "intelligent-tree-select": "~0.8.3",
+    "leaflet": "^1.7.1",
+    "react-leaflet": "^3.2.0"
   },
   "peerDependencies": {
     "@kbss-cvut/s-forms": "^0.4.1"

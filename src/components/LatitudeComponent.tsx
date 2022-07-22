@@ -14,21 +14,13 @@ interface Props {
     question: object
 }
 
-class LongitudeComponent extends Question {
+class LatitudeComponent extends Question {
 
-    static mappingRule = (q: Question) => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE);
+    //static mappingRule = (q: Question) => JsonLdUtils.hasValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE);
 
     constructor(props: Props) {
         super(props);
-        console.log("Longitude component init");
-    }
-
-    onSubQuestionChange = (subQuestionIndex: number, change: any) => {
-        this._handleChange(SConstants.HAS_SUBQUESTION, subQuestionIndex, change);
-    };
-
-    _getAnswerWidthStyle() {
-        return super._getAnswerWidthStyle();
+        console.log("Latitude component init");
     }
 
     renderAnswers() {
@@ -50,19 +42,20 @@ class LongitudeComponent extends Question {
                     onMouseEnter={this._onMouseEnterHandler}
                     onMouseLeave={this._onMouseLeaveHandler}
                 >
-                    <Answer
-                        index={0}
-                        answer={answers[0]}
-                        question={question}
-                        onChange={this.handleAnswerChange}
-                        onCommentChange={this.handleCommentChange}
-                        showIcon={this.state.showIcon}
-                    />
+                  <Answer
+                      index={0}
+                      answer={answers[0]}
+                      question={question}
+                      onChange={this.handleAnswerChange}
+                      onCommentChange={this.handleCommentChange}
+                      showIcon={this.state.showIcon}
+                  />
                 </div>
             );
+
         return children;
     }
 }
 
-LongitudeComponent.contextType = ConfigurationContext;
-export default LongitudeComponent;
+LatitudeComponent.contextType = ConfigurationContext;
+export default LatitudeComponent;

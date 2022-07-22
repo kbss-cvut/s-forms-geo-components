@@ -12,6 +12,7 @@ export default class Constants {
     static HAS_NON_SELECTABLE_VALUE = 'http://onto.fel.cvut.cz/ontologies/form/has-non-selectable-value';
 
     static HAS_MAIN_PROCESSING_ASPECT_TARGET = 'http://onto.fel.cvut.cz/ontologies/kodi/sgov2sforms/has-main-processing-aspect-target';
+    static HAS_PRECEDING_QUESTION = 'http://onto.fel.cvut.cz/ontologies/form/has-preceding-question';
     static LONGITUDE = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-délka';
     static LATITUDE = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-šírka';
 
