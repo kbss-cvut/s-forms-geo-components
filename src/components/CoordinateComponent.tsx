@@ -41,8 +41,6 @@ export default class CoordinateComponent extends Question {
     _updateCoordValue() {
         const question = this.props.question;
 
-        console.log(question);
-
         question[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {
             '@value': this.props.coordValue
         };
