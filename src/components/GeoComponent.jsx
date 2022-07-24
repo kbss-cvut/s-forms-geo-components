@@ -1,27 +1,25 @@
 import React from 'react';
 import {
     Question,
-    FormUtils,
     ConfigurationContext,
-    Answer, FormQuestionsContext
+    FormQuestionsContext
 } from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import classNames from 'classnames';
 import Utils from "../Utils";
 import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
-import LongitudeComponent from "./LongitudeComponent";
-import LatitudeComponent from "./LatitudeComponent";
+import CoordinateComponent from "./CoordinateComponent";
 
 class _GeoComponent extends Question {
 
     constructor(props) {
         super(props);
+        this.state = {
+            latitude: 0,
+            longitude: 0
+        };
         console.log("Geo component init");
-    }
-
-    _getAnswerWidthStyle() {
-        return super._getAnswerWidthStyle();
     }
 
     getLongitudeProps(question) {
@@ -35,9 +33,15 @@ class _GeoComponent extends Question {
         }
     }
 
-    renderAnswers() {
+    onMarkerLocationChange = (latitude, longitude) => {
+        this.setState({
+            latitude: latitude,
+            longitude: longitude
+        });
+    }
+
+    render() {
         const question = this.props.question;
-        let cls;
 
         const parent = Utils.findParent(this.props.formData.root, question['@id']);
         if (!parent) {
@@ -52,23 +56,23 @@ class _GeoComponent extends Question {
             return null;
         }
 
-        const answers = this._getAnswers();
-        cls = classNames(
+        const cls = classNames(
             'answer',
             Question._getQuestionCategoryClass(question),
             Question.getEmphasizedOnRelevantClass(question)
         );
+
         return [
             <div>
-            <MapComponent/>
+            <MapComponent onMarkerLocationChange={this.onMarkerLocationChange}/>
+                <div key={'row-item-0'} className={cls} id={question['@id']}>
                     { Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
-                    &&
-                        <div className="base-question">
-                    <LongitudeComponent {...this.getLongitudeProps(longitudeQuestion)}/>
-                        </div>
+                        &&
+                        <CoordinateComponent coordValue={this.state.longitude} {...this.getLongitudeProps(longitudeQuestion)}/>
                     }
-                <div className="unit-question">
-                    <LatitudeComponent {...this.props}/>
+                    <div className={'latitude'}>
+                        <CoordinateComponent coordValue={this.state.latitude} {...this.props}/>
+                    </div>
                 </div>
             </div>
         ];

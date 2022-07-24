@@ -8,8 +8,6 @@ import Utils from "./Utils";
 import SectionComponent from "./components/SectionComponent";
 import NiceComponent from "./components/NiceComponent";
 import GeoComponent from "./components/GeoComponent";
-import LongitudeComponent from "./components/LongitudeComponent";
-import JsonLdUtils from "jsonld-utils";
 
 export default class GeoComponents {
 
@@ -54,10 +52,6 @@ export default class GeoComponents {
         component: GeoComponent,
         mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE)
       },
-      /*{
-        component: LongitudeComponent,
-        mapRule: LongitudeComponent.mappingRule
-      },*/
       {
         component: NullQuestion,
         mapRule: (q, form) => GeoComponents._cached(q, form, 'NullQuestion-unit-of-measure', () => {
