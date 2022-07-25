@@ -28,6 +28,7 @@
     "dist/"
   ],
   "dependencies": {
+    "@types/leaflet": "^1.7.11",
     "intelligent-tree-select": "~0.8.3",
     "leaflet": "^1.8.0",
     "react-leaflet": "^3.2.5"
