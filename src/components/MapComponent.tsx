@@ -60,11 +60,9 @@ export default class MapComponent extends React.Component<Props, MapState> {
         }));
 
         props.onMarkerLocationChange(this.state.coords[0], this.state.coords[1]);
-        console.log(this.state.coords);
     }
 
     componentDidMount() {
-        console.log(this.state.coords);
         const mapEl =  document.querySelector("#map");
         // Clickable section label (Geometrie)
         let sectionParent;

@@ -11,20 +11,6 @@ export default class SectionComponent extends Question {
 
   constructor(props) {
     super(props);
-
-    const toggleCollapseSuper = this.toggleCollapse;
-    this.toggleCollapse = (e) => {
-      let classList = e.target.classList;
-      if (!classList.contains('answer-content') && !classList.contains('card-header')
-          && !classList.contains('answer') && !classList.contains('show-advanced-switch')
-          && !classList.contains('d-inline') && !classList.contains('caret-square-down')
-          && !classList.contains('form-label')
-          && !(classList.length === 0)
-      ) {
-        return;
-      }
-      toggleCollapseSuper();
-    }
   }
 
   onSubQuestionChange = (subQuestionIndex, change) => {
