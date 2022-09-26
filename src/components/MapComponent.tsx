@@ -1,4 +1,4 @@
-import React, {useState} from "react";
+import React, {useEffect, useState} from "react";
 import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L, {LatLng, LatLngExpression} from 'leaflet';
@@ -10,7 +10,9 @@ import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
-    shadowUrl: iconShadow
+    shadowUrl: iconShadow,
+    iconSize: [32, 44],
+    iconAnchor: [16, 44]
 });
 
 L.Marker.prototype.options.icon = DefaultIcon;
@@ -22,8 +24,19 @@ interface Props {
     onChange?: (latitude: number, longitude: number) => void
 }
 
-function LocationMarker(props: Props) {
+interface MarkerProps extends Props {
+    readonly initPosition?: LatLng
+}
+
+function LocationMarker(props: MarkerProps) {
     const [markerCoords, setMarkerCoords] = useState<LatLngExpression>(new LatLng(position[0], position[1]));
+
+    const [init, setInit] = useState(false);
+    if (!init && !props.initPosition?.equals(new LatLng(position[0], position[1]))) {
+        setMarkerCoords(props.initPosition);
+        setInit(true);
+    }
+
     const map = useMapEvents({
         click(e) {
             setMarkerCoords([e.latlng.lat, e.latlng.lng]);
@@ -55,11 +68,13 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
         this.mapRef = React.createRef();
 
-        navigator.geolocation.getCurrentPosition(geolocation => this.setState({
-            coords: [geolocation.coords.latitude, geolocation.coords.longitude]
-        }));
-
-        props.onMarkerLocationChange(this.state.coords[0], this.state.coords[1]);
+        navigator.geolocation.getCurrentPosition(geolocation => {
+            this.setState({
+                coords: [geolocation.coords.latitude, geolocation.coords.longitude]
+            });
+            props.onMarkerLocationChange(geolocation.coords.latitude, geolocation.coords.longitude);
+            this.mapRef?.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude));
+        });
     }
 
     componentDidMount() {
@@ -104,7 +119,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                         />
-                        <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
+                        <LocationMarker {...this.props} initPosition={new LatLng(this.state.coords[0], this.state.coords[1])} onChange={this.updateMapCenter}/>
                     </MapContainer>
                 </div>
             );
