@@ -1,11 +1,7 @@
-import CompositeQuestion from "./components/CompositeQuestion"
 import Constants from "./Constants";
 import {Constants as SConstants} from "@kbss-cvut/s-forms";
-import WizardStepComponent from "./components/WizardStepComponent";
-import QuestionWithUnit from "./components/QuestionWithUnit";
 import NullQuestion from "./components/NullQuestion";
 import Utils from "./Utils";
-import SectionComponent from "./components/SectionComponent";
 import NiceComponent from "./components/NiceComponent";
 import GeoComponent from "./components/GeoComponent";
 
@@ -33,18 +29,6 @@ export default class GeoComponents {
   static getComponentMapping() {
     return [
       {
-        component: WizardStepComponent,
-        mapRule: WizardStepComponent.mappingRule
-      },
-      {
-        component: SectionComponent,
-        mapRule: SectionComponent.mappingRule
-      },
-      {
-        component: CompositeQuestion,
-        mapRule: CompositeQuestion.mappingRule
-      },
-      {
         component: NiceComponent,
         mapRule: NiceComponent.mappingRule
       },
@@ -66,22 +50,16 @@ export default class GeoComponents {
           return Utils.hasPropertyWithValue(parent, Constants.HAS_TYPE_QUESTION, q['@id']);
         })
       },
-      {
+      /*{
         component: NullQuestion,
         mapRule: q => {
           return !!q[Constants.SHOW_ADVANCED_QUESTION]
         }
-      },
+      },*/
       {
         component: NullQuestion,
         mapRule: q => {
           return Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE);
-        }
-      },
-      {
-        component: QuestionWithUnit,
-        mapRule: q => {
-          return !!q[Constants.HAS_UNIT_OF_MEASURE]
         }
       }
     ];
