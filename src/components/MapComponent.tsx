@@ -7,6 +7,7 @@ import {Map as LeafletMap } from 'leaflet';
 import icon from 'leaflet/dist/images/marker-icon.png';
 // @ts-ignore
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
+import Constants from '../Constants.js';
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -17,7 +18,7 @@ let DefaultIcon = L.icon({
 
 L.Marker.prototype.options.icon = DefaultIcon;
 
-const position = [50.07627554166782, 14.419010682209004];
+const position = Constants.DEFAULT_COORDINATES;
 
 interface Props {
     onMarkerLocationChange: (latitude: number, longitude: number) => void,
@@ -36,6 +37,10 @@ function LocationMarker(props: MarkerProps) {
         setMarkerCoords(props.initPosition);
         setInit(true);
     }
+
+    useEffect(() => {
+        setMarkerCoords(props.initPosition);
+    },[props.initPosition])
 
     const map = useMapEvents({
         click(e) {
@@ -58,7 +63,7 @@ interface MapState {
 }
 
 export default class MapComponent extends React.Component<Props, MapState> {
-    private mapRef: React.MutableRefObject<LeafletMap | null>;
+    private readonly mapRef: React.MutableRefObject<LeafletMap | null>;
 
     constructor(props: Props) {
         super(props);
@@ -103,11 +108,15 @@ export default class MapComponent extends React.Component<Props, MapState> {
         }
     }
 
+    relocateBasedOnUserInput = (latitude: string, longitude: string) => {
+        this.updateMapCenter(parseFloat(latitude), parseFloat(longitude));
+    }
+
     updateMapCenter = (latitude: number, longitude: number) => {
         this.setState({
             coords: [latitude, longitude]
         });
-        this.mapRef.current?.setView(new LatLng(this.state.coords[0], this.state.coords[1]));
+        this.mapRef.current?.setView(new LatLng(latitude, longitude));
     }
 
     render() {

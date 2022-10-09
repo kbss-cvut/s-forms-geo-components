@@ -5,14 +5,15 @@ import {
     Constants as SConstants
 } from '@kbss-cvut/s-forms';
 
-interface Props {
+export interface CoordinateProps {
     question: object,
-    coordValue: number
+    coordValue: number,
+    onInput: (coordinate: string) => void
 }
 
 export default class CoordinateComponent extends Question {
 
-    constructor(props: Props) {
+    constructor(props: CoordinateProps) {
         super(props);
         this.state = {
             coordValue: this.props.coordValue
@@ -34,8 +35,16 @@ export default class CoordinateComponent extends Question {
         return null;
     }
 
-    handleAnswerChange = (answerIndex: number, change: object) => {
-        this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
+    handleAnswerChange = (answerIndex: number, change: any) => {
+        if (change[SConstants.HAS_DATA_VALUE]) {
+            const inputValue: string = change[SConstants.HAS_DATA_VALUE]["@value"];
+
+            const regExp = new RegExp("^\\d{1,3}\\.?\\d+$");
+            if (regExp.test(inputValue)) {
+                this.props.onInput(inputValue);
+                this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
+            }
+        }
     };
 
     _updateCoordValue() {

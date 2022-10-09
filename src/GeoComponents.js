@@ -3,7 +3,7 @@ import {Constants as SConstants} from "@kbss-cvut/s-forms";
 import NullQuestion from "./components/NullQuestion";
 import Utils from "./Utils";
 import NiceComponent from "./components/NiceComponent";
-import GeoComponent from "./components/GeoComponent";
+import GeoComponent from "./components/GeoComponent.tsx";
 
 export default class GeoComponents {
 

@@ -7,18 +7,27 @@ import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import CoordinateComponent from "./CoordinateComponent";
 
-class _GeoComponent extends Question {
+interface Props {
+    index: number,
+    onChange: object,
+    question: object,
+    collapsible: boolean,
+    withoutCard: boolean
+}
 
-    constructor(props) {
+class _GeoComponent extends Question {
+    private mapComponentRef = React.createRef<MapComponent>();
+
+    constructor(props: Props) {
         super(props);
         this.state = {
-            latitude: 0,
-            longitude: 0
+            latitude: Constants.DEFAULT_COORDINATES[0],
+            longitude: Constants.DEFAULT_COORDINATES[1],
         };
         console.log("Geo component init");
     }
 
-    getLongitudeProps(question) {
+    getLongitudeProps(question: any) {
         return {
             question: question.q,
             index: question.index,
@@ -29,14 +38,29 @@ class _GeoComponent extends Question {
         }
     }
 
-    onMarkerLocationChange = (latitude, longitude) => {
+    onMarkerLocationChange = (latitude: number, longitude: number) => {
         this.setState({
             latitude: latitude,
             longitude: longitude
         });
     }
 
-    render() {
+    onUserLongitudeInput = (longitudeInput: string) => {
+        this.setState({
+            longitude: longitudeInput
+        });
+        this.mapComponentRef.current?.relocateBasedOnUserInput(this.state.latitude, longitudeInput);
+    }
+
+    onUserLatitudeInput = (latitudeInput: string) => {
+        this.setState({
+            latitude: latitudeInput
+        });
+        this.mapComponentRef.current?.relocateBasedOnUserInput(latitudeInput, this.state.longitude);
+
+    }
+
+    render(): Element | any {
         const question = this.props.question;
 
         const parent = Utils.findParent(this.props.formData.root, question['@id']);
@@ -60,21 +84,16 @@ class _GeoComponent extends Question {
 
         return [
             <div>
-                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange}/>
-                {Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
-                    &&
-                    <div>
-                        <div className={'coordinate'}>
+                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} ref={this.mapComponentRef}/>
 
-                            <CoordinateComponent
-                                coordValue={this.state.longitude} {...this.getLongitudeProps(longitudeQuestion)}/>
-                        </div>
+                <div className={'coordinate'}>
+                    <CoordinateComponent
+                        coordValue={this.state.longitude} onInput={this.onUserLongitudeInput} {...this.getLongitudeProps(longitudeQuestion)}/>
+                </div>
 
-                        <div className={'coordinate'}>
-                            <CoordinateComponent coordValue={this.state.latitude} {...this.props}/>
-                        </div>
-                    </div>
-                }
+                <div className={'coordinate'}>
+                    <CoordinateComponent coordValue={this.state.latitude} onInput={this.onUserLatitudeInput} {...this.props}/>
+                </div>
             </div>
         ];
     }
@@ -83,7 +102,7 @@ class _GeoComponent extends Question {
 _GeoComponent.propTypes.formData = PropTypes.object;
 _GeoComponent.contextType = ConfigurationContext;
 
-const GeoComponent = (props) => {
+const GeoComponent = (props: Props) => {
     const formQuestionsContext = React.useContext(FormQuestionsContext);
     const formData = formQuestionsContext.getData();
 
