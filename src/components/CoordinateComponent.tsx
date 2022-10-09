@@ -20,6 +20,7 @@ export default class CoordinateComponent extends Question {
     }
 
     componentDidMount() {
+        super.componentDidMount();
         this._updateCoordValue();
     }
 
@@ -33,9 +34,8 @@ export default class CoordinateComponent extends Question {
         return null;
     }
 
-    handleAnswerChange = (answerIndex: number, change: any) => {
+    handleAnswerChange = (answerIndex: number, change: object) => {
         this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
-        this._updateCoordValue();
     };
 
     _updateCoordValue() {

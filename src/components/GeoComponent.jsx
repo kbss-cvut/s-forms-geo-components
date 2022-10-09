@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-    Question,
-    ConfigurationContext,
-    FormQuestionsContext
-} from '@kbss-cvut/s-forms';
+import {ConfigurationContext, FormQuestionsContext, Question} from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import classNames from 'classnames';
 import Utils from "../Utils";
@@ -64,16 +60,21 @@ class _GeoComponent extends Question {
 
         return [
             <div>
-            <MapComponent onMarkerLocationChange={this.onMarkerLocationChange}/>
-                <div key={'row-item-0'} className={cls} id={question['@id']}>
-                    { Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
-                        &&
-                        <CoordinateComponent coordValue={this.state.longitude} {...this.getLongitudeProps(longitudeQuestion)}/>
-                    }
-                    <div className={'latitude'}>
-                        <CoordinateComponent coordValue={this.state.latitude} {...this.props}/>
+                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange}/>
+                {Utils.hasPropertyWithValue(this.props.question, Constants.HAS_PRECEDING_QUESTION, this.props.question.id)
+                    &&
+                    <div>
+                        <div className={'coordinate'}>
+
+                            <CoordinateComponent
+                                coordValue={this.state.longitude} {...this.getLongitudeProps(longitudeQuestion)}/>
+                        </div>
+
+                        <div className={'coordinate'}>
+                            <CoordinateComponent coordValue={this.state.latitude} {...this.props}/>
+                        </div>
                     </div>
-                </div>
+                }
             </div>
         ];
     }
