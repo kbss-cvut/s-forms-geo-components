@@ -25,7 +25,7 @@ interface Props {
 }
 
 interface MarkerProps extends Props {
-    readonly initPosition?: LatLng
+    readonly initPosition: LatLng
 }
 
 function LocationMarker(props: MarkerProps) {
@@ -39,7 +39,7 @@ function LocationMarker(props: MarkerProps) {
 
     const map = useMapEvents({
         click(e) {
-            setMarkerCoords([e.latlng.lat, e.latlng.lng]);
+            setMarkerCoords(new LatLng(e.latlng.lat, e.latlng.lng));
             props.onMarkerLocationChange(e.latlng.lat, e.latlng.lng);
             props.onChange?.(e.latlng.lat, e.latlng.lng);
         }
@@ -73,7 +73,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
                 coords: [geolocation.coords.latitude, geolocation.coords.longitude]
             });
             props.onMarkerLocationChange(geolocation.coords.latitude, geolocation.coords.longitude);
-            this.mapRef?.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude));
+            if (this.mapRef != null && this.mapRef.current != null)
+                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude));
         });
     }
 
