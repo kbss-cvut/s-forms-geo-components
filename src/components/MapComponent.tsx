@@ -1,13 +1,16 @@
-import React, {useEffect, useState} from "react";
-import {MapContainer, Marker, Popup, TileLayer, useMapEvents} from 'react-leaflet';
+import React, {useState} from "react";
+import {LayersControl, MapContainer, Marker, TileLayer, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
-import L, {LatLng, LatLngExpression} from 'leaflet';
-import {Map as LeafletMap } from 'leaflet';
+import L, {LatLng, LatLngExpression, Map as LeafletMap} from 'leaflet';
 // @ts-ignore
 import icon from 'leaflet/dist/images/marker-icon.png';
 // @ts-ignore
 import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 import Constants from '../Constants.js';
+import Control from "react-leaflet-custom-control";
+import LocateIcon from "./LocateIcon";
+import CircleLayer from "./CircleLayer";
+import CheckboxAnswer from "@kbss-cvut/s-forms/dist/components/answer/CheckboxAnswer";
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -26,21 +29,10 @@ interface Props {
 }
 
 interface MarkerProps extends Props {
-    readonly initPosition: LatLng
 }
 
 function LocationMarker(props: MarkerProps) {
-    const [markerCoords, setMarkerCoords] = useState<LatLngExpression>(new LatLng(position[0], position[1]));
-
-    const [init, setInit] = useState(false);
-    if (!init && !props.initPosition?.equals(new LatLng(position[0], position[1]))) {
-        setMarkerCoords(props.initPosition);
-        setInit(true);
-    }
-
-    useEffect(() => {
-        setMarkerCoords(props.initPosition);
-    },[props.initPosition])
+    const [markerCoords, setMarkerCoords] = useState<LatLngExpression | null>(null);
 
     const map = useMapEvents({
         click(e) {
@@ -52,14 +44,15 @@ function LocationMarker(props: MarkerProps) {
 
     return markerCoords === null ? null : (
         <Marker position={markerCoords}>
-            <Popup>You are here</Popup>
         </Marker>
     )
 }
 
 
 interface MapState {
-    coords: number[]
+    coords: number[],
+    showUserLocationCircle: boolean,
+    userLocationCoords: number[]
 }
 
 export default class MapComponent extends React.Component<Props, MapState> {
@@ -69,18 +62,11 @@ export default class MapComponent extends React.Component<Props, MapState> {
         super(props);
         this.state = {
             coords: position,
+            showUserLocationCircle: false,
+            userLocationCoords: [0,0]
         }
 
         this.mapRef = React.createRef();
-
-        navigator.geolocation.getCurrentPosition(geolocation => {
-            this.setState({
-                coords: [geolocation.coords.latitude, geolocation.coords.longitude]
-            });
-            props.onMarkerLocationChange(geolocation.coords.latitude, geolocation.coords.longitude);
-            if (this.mapRef != null && this.mapRef.current != null)
-                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude));
-        });
     }
 
     componentDidMount() {
@@ -108,6 +94,17 @@ export default class MapComponent extends React.Component<Props, MapState> {
         }
     }
 
+    onLocateIconClicked = () => {
+        navigator.geolocation.getCurrentPosition(geolocation => {
+            this.setState({
+                coords: [geolocation.coords.latitude, geolocation.coords.longitude]
+            });
+            this.setState({ showUserLocationCircle: true, userLocationCoords: [geolocation.coords.latitude, geolocation.coords.longitude]});
+            if (this.mapRef != null && this.mapRef.current != null)
+                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude), 15);
+        });
+    }
+
     relocateBasedOnUserInput = (latitude: string, longitude: string) => {
         this.updateMapCenter(parseFloat(latitude), parseFloat(longitude));
     }
@@ -119,17 +116,44 @@ export default class MapComponent extends React.Component<Props, MapState> {
         this.mapRef.current?.setView(new LatLng(latitude, longitude));
     }
 
+    canRenderStreetMap() {
+        const checkbox: HTMLInputElement | null = document.querySelector(".leaflet-control-layers-selector");
+
+        return checkbox != null && !checkbox.checked;
+    }
+
     render() {
         if (this.state.coords) {
             return (
                 <div>
-                    <MapContainer id={"map"} center={new LatLng(this.state.coords[0], this.state.coords[1])} zoom={13} scrollWheelZoom={false}
+                    <MapContainer id={"map"} center={new LatLng(this.state.coords[0], this.state.coords[1])} zoom={7} scrollWheelZoom={true}
                                   whenCreated={mapInstance => this.mapRef.current = mapInstance}>
-                        <TileLayer
-                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                        />
-                        <LocationMarker {...this.props} initPosition={new LatLng(this.state.coords[0], this.state.coords[1])} onChange={this.updateMapCenter}/>
+                        <LayersControl position="bottomleft">
+
+                            <LayersControl.Overlay name="Satellite">
+                                <TileLayer
+                                    url='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
+                                    maxZoom= {20}
+                                    subdomains={['mt1','mt2','mt3']}
+                                />
+                            </LayersControl.Overlay>
+
+                            {
+                                this.canRenderStreetMap() &&
+                                <TileLayer
+                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                />
+                            }
+
+                        <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
+                        {
+                            this.state.showUserLocationCircle && <CircleLayer center={this.state.userLocationCoords}/>
+                        }
+                        <Control position='topright'>
+                            <LocateIcon onClick={this.onLocateIconClicked}/>
+                        </Control>
+                        </LayersControl>
                     </MapContainer>
                 </div>
             );

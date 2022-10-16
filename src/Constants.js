@@ -23,5 +23,5 @@ export default class Constants {
     static BROADER = 'http://www.w3.org/2004/02/skos/core#broader';
     static DISJOINT_WITH = 'http://www.w3.org/2002/07/owl#disjointWith';
 
-    static DEFAULT_COORDINATES = [50.07627554166782, 14.419010682209004];
+    static DEFAULT_COORDINATES = [50.0, 16.0];
 }
