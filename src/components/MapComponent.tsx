@@ -10,7 +10,6 @@ import Constants from '../Constants.js';
 import Control from "react-leaflet-custom-control";
 import LocateIcon from "./LocateIcon";
 import CircleLayer from "./CircleLayer";
-import CheckboxAnswer from "@kbss-cvut/s-forms/dist/components/answer/CheckboxAnswer";
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -133,8 +132,9 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             <LayersControl.Overlay name="Satellite">
                                 <TileLayer
                                     url='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-                                    maxZoom= {20}
                                     subdomains={['mt1','mt2','mt3']}
+                                    maxNativeZoom={19}
+                                    maxZoom={21}
                                 />
                             </LayersControl.Overlay>
 
@@ -143,6 +143,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                 <TileLayer
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                                    maxNativeZoom={19}
+                                    maxZoom={21}
                                 />
                             }
 
