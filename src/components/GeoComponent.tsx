@@ -2,7 +2,7 @@ import React from 'react';
 import {ConfigurationContext, FormQuestionsContext, Question} from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import classNames from 'classnames';
-import Utils from "../Utils";
+import Utils from "../utils/Utils";
 import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import CoordinateComponent from "./CoordinateComponent";

@@ -10,6 +10,8 @@ import Constants from '../Constants.js';
 import Control from "react-leaflet-custom-control";
 import LocateIcon from "./LocateIcon";
 import CircleLayer from "./CircleLayer";
+import AddressPlaceMarker from "./AddressPlaceMarker";
+import AddressPlace from "./AddressPlace";
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -51,7 +53,8 @@ function LocationMarker(props: MarkerProps) {
 interface MapState {
     coords: number[],
     showUserLocationCircle: boolean,
-    userLocationCoords: number[]
+    userLocationCoords: number[],
+    canRenderClosestAddressPlace: boolean
 }
 
 export default class MapComponent extends React.Component<Props, MapState> {
@@ -62,7 +65,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
         this.state = {
             coords: position,
             showUserLocationCircle: false,
-            userLocationCoords: [0,0]
+            userLocationCoords: [0,0],
+            canRenderClosestAddressPlace: false
         }
 
         this.mapRef = React.createRef();
@@ -121,12 +125,32 @@ export default class MapComponent extends React.Component<Props, MapState> {
         return checkbox != null && !checkbox.checked;
     }
 
+    handleMapInteractionEnd = () => {
+        if (!this.mapRef.current)
+            return;
+
+        const zoom = this.mapRef.current.getZoom();
+        if (zoom && zoom >= 19) {
+            this.setState({
+                canRenderClosestAddressPlace: true
+            });
+        } else {
+            this.setState({
+                canRenderClosestAddressPlace: false
+            })
+        }
+    }
+
     render() {
         if (this.state.coords) {
             return (
                 <div>
                     <MapContainer id={"map"} center={new LatLng(this.state.coords[0], this.state.coords[1])} zoom={7} scrollWheelZoom={true}
-                                  whenCreated={mapInstance => this.mapRef.current = mapInstance}>
+                                  whenCreated={mapInstance => {
+                                      this.mapRef.current = mapInstance;
+                                      this.mapRef.current.addEventListener("zoomend", this.handleMapInteractionEnd);
+                                      this.mapRef.current.addEventListener("moveend", this.handleMapInteractionEnd);
+                                  }} >
                         <LayersControl position="bottomleft">
 
                             <LayersControl.Overlay name="Satellite">
@@ -146,6 +170,12 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                     maxNativeZoom={19}
                                     maxZoom={21}
                                 />
+                            }
+
+                            {
+                                //Try to render address place near the center of the map only when zoomed 19 and more
+                                this.state.canRenderClosestAddressPlace && this.mapRef.current &&
+                                <AddressPlaceMarker coords={this.mapRef.current.getCenter()}/>
                             }
 
                         <LocationMarker {...this.props} onChange={this.updateMapCenter}/>

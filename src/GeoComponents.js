@@ -1,7 +1,7 @@
 import Constants from "./Constants";
 import {Constants as SConstants} from "@kbss-cvut/s-forms";
 import NullQuestion from "./components/NullQuestion";
-import Utils from "./Utils";
+import Utils from "./utils/Utils.js";
 import NiceComponent from "./components/NiceComponent";
 import GeoComponent from "./components/GeoComponent.tsx";
 
