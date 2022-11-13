@@ -25,6 +25,7 @@ L.Marker.prototype.options.icon = DefaultIcon;
 const position = Constants.DEFAULT_COORDINATES;
 
 interface Props {
+    onAddressPlacePicked: (addressPlace: AddressPlace) => void,
     onMarkerLocationChange: (latitude: number, longitude: number) => void,
     onChange?: (latitude: number, longitude: number) => void
 }
@@ -175,7 +176,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             {
                                 //Try to render address place near the center of the map only when zoomed 19 and more
                                 this.state.canRenderClosestAddressPlace && this.mapRef.current &&
-                                <AddressPlaceMarker coords={this.mapRef.current.getCenter()}/>
+                                <AddressPlaceMarker coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked}/>
                             }
 
                         <LocationMarker {...this.props} onChange={this.updateMapCenter}/>

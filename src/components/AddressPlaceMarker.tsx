@@ -4,6 +4,7 @@ import {Marker, Popup} from "react-leaflet";
 import inspire_address_api from "../api/inspire_address_api";
 import AddressPlace from "./AddressPlace";
 import AddressPlaceParser from "../utils/AddressPlaceParser";
+import {Button} from "react-bootstrap";
 
 const iconAddressPlace = L.icon({
     iconUrl: require("../img/geo-fill.svg"),
@@ -13,7 +14,8 @@ const iconAddressPlace = L.icon({
 });
 
 interface Props {
-    coords: LatLng
+    coords: LatLng,
+    onPick: (addressPlace: AddressPlace) => void
 }
 
 interface State {
@@ -68,7 +70,8 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
                     {this.state.addressPlace.lat} <br/>
                     {this.state.addressPlace.lng} <br/>
                     {this.state.addressPlace.city} <br/>
-                    {this.state.addressPlace.postalCode} <br/>
+                    {this.state.addressPlace.postalCode} <br/><br/>
+                    <Button onClick={() => {this.props.onPick(this.state.addressPlace)}}>Fill in the form</Button>
                 </Popup>
             </Marker>
         )

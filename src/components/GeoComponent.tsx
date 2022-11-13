@@ -6,6 +6,7 @@ import Utils from "../utils/Utils";
 import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import CoordinateComponent from "./CoordinateComponent";
+import AddressPlace from "./AddressPlace";
 
 interface Props {
     index: number,
@@ -60,6 +61,15 @@ class _GeoComponent extends Question {
 
     }
 
+    onAddressPlacePicked = (addressPlace : AddressPlace) => {
+        this.setState({
+            latitude: addressPlace.lat,
+            longitude: addressPlace.lng
+        });
+        this.mapComponentRef.current?.relocateBasedOnUserInput(String(addressPlace.lat), String(addressPlace.lng));
+    }
+
+
     render(): Element | any {
         const question = this.props.question;
 
@@ -84,7 +94,7 @@ class _GeoComponent extends Question {
 
         return [
             <div>
-                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} ref={this.mapComponentRef}/>
+                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
 
                 <div className={'coordinate'}>
                     <CoordinateComponent
