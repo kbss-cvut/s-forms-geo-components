@@ -3,7 +3,7 @@ import {Circle, LayerGroup, Tooltip} from "react-leaflet";
 import {LatLng} from "leaflet";
 
 interface Props {
-    center: number[]
+    userLocation: GeolocationPosition
 }
 
 export default class CircleLayer extends React.Component<Props, any> {
@@ -15,9 +15,9 @@ export default class CircleLayer extends React.Component<Props, any> {
         return (
         <LayerGroup>
             <Circle
-                center={new LatLng(this.props.center[0], this.props.center[1])}
+                center={new LatLng(this.props.userLocation.coords.latitude, this.props.userLocation.coords.longitude)}
                 pathOptions={{ fillColor: 'blue' }}
-                radius={120}
+                radius={this.props.userLocation.coords.accuracy}
             >
                 <Tooltip direction="bottom" offset={[0, 20]} opacity={1}>
                 Zde se nacházíte

@@ -54,7 +54,7 @@ function LocationMarker(props: MarkerProps) {
 interface MapState {
     coords: number[],
     showUserLocationCircle: boolean,
-    userLocationCoords: number[],
+    userLocation: GeolocationPosition | null,
     canRenderClosestAddressPlace: boolean
 }
 
@@ -66,7 +66,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
         this.state = {
             coords: position,
             showUserLocationCircle: false,
-            userLocationCoords: [0,0],
+            userLocation: null,
             canRenderClosestAddressPlace: false
         }
 
@@ -103,10 +103,13 @@ export default class MapComponent extends React.Component<Props, MapState> {
             this.setState({
                 coords: [geolocation.coords.latitude, geolocation.coords.longitude]
             });
-            this.setState({ showUserLocationCircle: true, userLocationCoords: [geolocation.coords.latitude, geolocation.coords.longitude]});
-            if (this.mapRef != null && this.mapRef.current != null)
-                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude), 15);
-        });
+            this.setState({ showUserLocationCircle: true, userLocation: geolocation});
+            if (this.mapRef != null && this.mapRef.current != null) {
+                let zoomValue;
+                geolocation.coords.accuracy <= 1000 ? zoomValue = 17 : zoomValue = 15;
+                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude), zoomValue);
+            }
+        }, error => console.warn(error.message));
     }
 
     relocateBasedOnUserInput = (latitude: string, longitude: string) => {
@@ -181,7 +184,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                         <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
                         {
-                            this.state.showUserLocationCircle && <CircleLayer center={this.state.userLocationCoords}/>
+                            this.state.showUserLocationCircle && this.state.userLocation && <CircleLayer userLocation={this.state.userLocation}/>
                         }
                         <Control position='topright'>
                             <LocateIcon onClick={this.onLocateIconClicked}/>
