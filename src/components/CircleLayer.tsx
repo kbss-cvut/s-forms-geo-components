@@ -13,17 +13,13 @@ export default class CircleLayer extends React.Component<Props, any> {
 
     render() {
         return (
-        <LayerGroup>
-            <Circle
-                center={new LatLng(this.props.userLocation.coords.latitude, this.props.userLocation.coords.longitude)}
-                pathOptions={{ fillColor: 'blue' }}
-                radius={this.props.userLocation.coords.accuracy}
-            >
-                <Tooltip direction="bottom" offset={[0, 20]} opacity={1}>
-                Zde se nacházíte
-                </Tooltip>
-            </Circle>
-        </LayerGroup>
+        <Circle
+            center={new LatLng(this.props.userLocation.coords.latitude, this.props.userLocation.coords.longitude)}
+            pathOptions={{ fillColor: 'blue' }}
+            radius={this.props.userLocation.coords.accuracy}
+            className={"location-circle"}
+        >
+        </Circle>
         );
     }
 }

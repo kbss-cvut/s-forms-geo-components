@@ -154,3 +154,7 @@
 .locate-icon:hover {
     background-color: rgba(230,230,230,0.93) !important;
 }
+
+.location-circle {
+    cursor: grab !important;
+}
