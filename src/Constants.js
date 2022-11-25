@@ -13,8 +13,12 @@ export default class Constants {
 
     static HAS_MAIN_PROCESSING_ASPECT_TARGET = 'http://onto.fel.cvut.cz/ontologies/kodi/sgov2sforms/has-main-processing-aspect-target';
     static HAS_PRECEDING_QUESTION = 'http://onto.fel.cvut.cz/ontologies/form/has-preceding-question';
-    static LONGITUDE = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-délka';
-    static LATITUDE = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-šírka';
+    static HAS_RELATED_QUESTIONS = 'http://onto.fel.cvut.cz/ontologies/documentation/has_related_question';
+    static LONGITUDE_IRI = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-délka';
+    static LATITUDE_IRI = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-šírka';
+    static ADDRESS_IRI = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/adresa';
+
+    static ADDRESS_TEXT = 'https://slovník.gov.cz/generický/adresy/pojem/text-adresy';
 
     static LAYOUT_TYPE = 'nice';
     static LAYOUT_TYPE_QUESTION = 'type-question';

@@ -124,6 +124,19 @@ export default class Utils {
     return false;
   }
 
+  static getSubQuestionByPropertyValue(parent, property, value) {
+    let subQuestions = parent[SConstants.HAS_SUBQUESTION];
+    if (subQuestions && subQuestions.length) {
+      for (let subQuestion of subQuestions) {
+        if (subQuestion[property]["@id"] === value) {
+          return subQuestion;
+        }
+      }
+    }
+
+    return null;
+  }
+
   /**
    * Wraps passed object into new array if it is not array already.
    * @param object_or_array An object or array.

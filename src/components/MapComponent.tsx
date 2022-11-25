@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {LayersControl, MapContainer, Marker, TileLayer, useMapEvents} from 'react-leaflet';
+import {LayersControl, MapContainer, Marker, TileLayer, Tooltip, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L, {LatLng, LatLngExpression, Map as LeafletMap} from 'leaflet';
 // @ts-ignore
@@ -54,6 +54,9 @@ function LocationMarker(props: MarkerProps) {
 interface MapState {
     coords: number[],
     showUserLocationCircle: boolean,
+    showLocationMarker: boolean,
+    isAddressPlacePicked: boolean,
+    pickedAddressPlaceCoords: number[] | null,
     userLocation: GeolocationPosition | null,
     canRenderClosestAddressPlace: boolean
 }
@@ -65,7 +68,10 @@ export default class MapComponent extends React.Component<Props, MapState> {
         super(props);
         this.state = {
             coords: position,
+            showLocationMarker: true,
             showUserLocationCircle: false,
+            isAddressPlacePicked: false,
+            pickedAddressPlaceCoords: null,
             userLocation: null,
             canRenderClosestAddressPlace: false
         }
@@ -114,6 +120,21 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
     relocateBasedOnUserInput = (latitude: string, longitude: string) => {
         this.updateMapCenter(parseFloat(latitude), parseFloat(longitude));
+    }
+
+    onAddressPlacePicked = (latitude: string, longitude: string) => {
+        this.updateMapCenter(parseFloat(latitude), parseFloat(longitude));
+        this.setState({
+            isAddressPlacePicked: true,
+            pickedAddressPlaceCoords: [parseFloat(latitude), parseFloat(longitude)]
+        });
+    }
+
+    onMapClick = (latitude: number, longitude: number) => {
+        this.updateMapCenter(latitude, longitude);
+        if (this.state.isAddressPlacePicked) {
+            this.setState({isAddressPlacePicked: false});
+        }
     }
 
     updateMapCenter = (latitude: number, longitude: number) => {
@@ -182,10 +203,20 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                 <AddressPlaceMarker coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked}/>
                             }
 
-                        <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
-                        {
-                            this.state.showUserLocationCircle && this.state.userLocation && <CircleLayer userLocation={this.state.userLocation}/>
-                        }
+                            {
+                                this.state.isAddressPlacePicked &&
+                                <CircleLayer coords={this.state.pickedAddressPlaceCoords} radius={10} color={"green"} tooltipText={"Chosen address place"}/>
+
+                            }
+
+                            {
+                                this.state.showLocationMarker &&
+                                <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
+                            }
+
+                            {
+                                this.state.showUserLocationCircle && this.state.userLocation && <CircleLayer coords={[this.state.userLocation.coords.latitude, this.state.userLocation.coords.longitude]} radius={this.state.userLocation.coords.accuracy} color={"blue"}/>
+                            }
                         <Control position='topright'>
                             <LocateIcon onClick={this.onLocateIconClicked}/>
                         </Control>

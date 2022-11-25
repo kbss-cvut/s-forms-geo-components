@@ -34,7 +34,7 @@ export default class GeoComponents {
       },
       {
         component: GeoComponent,
-        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE)
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE_IRI)
       },
       {
         component: NullQuestion,
@@ -59,9 +59,13 @@ export default class GeoComponents {
       {
         component: NullQuestion,
         mapRule: q => {
-          return Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE);
+          return Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LONGITUDE_IRI);
         }
-      }
+      },
+      {
+        component: NullQuestion,
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_IRI)
+      },
     ];
   }
 

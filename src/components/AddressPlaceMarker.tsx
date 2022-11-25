@@ -36,10 +36,14 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
     getFeatureByPoint() {
         inspire_address_api.getFeatureByPoint(this.props.coords.lat, this.props.coords.lng)
             .then(response => {
-                this.setState({
-                    inputCoords: new LatLng(this.props.coords.lat, this.props.coords.lng),
-                    addressPlace: AddressPlaceParser.parseINSPIREAddressPlace(response.data)
-                });
+                const addressPlace = AddressPlaceParser.parseINSPIREAddressPlace(response.data);
+
+                if (this.state.addressPlace == null || addressPlace?.addressCode !== this.state.addressPlace.addressCode) {
+                    this.setState({
+                        inputCoords: new LatLng(this.props.coords.lat, this.props.coords.lng),
+                        addressPlace: addressPlace
+                    });
+                }
             })
             .catch(error => {
                 console.error(error);

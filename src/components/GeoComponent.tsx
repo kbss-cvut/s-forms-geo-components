@@ -7,6 +7,7 @@ import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import CoordinateComponent from "./CoordinateComponent";
 import AddressPlace from "./AddressPlace";
+import AddressComponent from "./AddressComponent";
 
 interface Props {
     index: number,
@@ -21,11 +22,34 @@ class _GeoComponent extends Question {
 
     constructor(props: Props) {
         super(props);
+
+
+        const addressQuestion = this.findRelatedQuestionByPropertyValue(this.props.formData.root, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_IRI);
+        if (!addressQuestion)
+            console.warn("No address question with value: " + Constants.ADDRESS_IRI + " for property: " + Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET);
+
         this.state = {
             latitude: Constants.DEFAULT_COORDINATES[0],
             longitude: Constants.DEFAULT_COORDINATES[1],
+            addressQuestion: addressQuestion
         };
+
         console.log("Geo component init");
+    }
+
+    findRelatedQuestionByPropertyValue(root: Question, property: string, id: string): Question | null {
+        if (!root[Constants.HAS_RELATED_QUESTIONS])
+            return null;
+        for (const question of root[Constants.HAS_RELATED_QUESTIONS]) {
+            if (question[property] && question[property]['@id'] && question[property]['@id'] == id) {
+                return question;
+            }
+            const result = this.findRelatedQuestionByPropertyValue(question, property, id);
+            if (result)
+                return result;
+        }
+
+        return null;
     }
 
     getLongitudeProps(question: any) {
@@ -36,6 +60,18 @@ class _GeoComponent extends Question {
             formData: this.props.formData,
             onChange: this.props.onChange,
             withoutCard: this.props.withoutCard
+        }
+    }
+
+    getAddressProps() {
+        return {
+            question: this.state.addressQuestion,
+            index: this.state.addressQuestion.index,
+            collapsible: this.props.collapsible,
+            formData: this.props.formData,
+            onChange: this.props.onChange,
+            withoutCard: this.props.withoutCard,
+            addressPlace: this.state.addressPlace
         }
     }
 
@@ -64,11 +100,11 @@ class _GeoComponent extends Question {
     onAddressPlacePicked = (addressPlace : AddressPlace) => {
         this.setState({
             latitude: addressPlace.lat,
-            longitude: addressPlace.lng
+            longitude: addressPlace.lng,
+            addressPlace: addressPlace
         });
-        this.mapComponentRef.current?.relocateBasedOnUserInput(String(addressPlace.lat), String(addressPlace.lng));
+        this.mapComponentRef.current?.onAddressPlacePicked(String(addressPlace.lat), String(addressPlace.lng));
     }
-
 
     render(): Element | any {
         const question = this.props.question;
@@ -94,6 +130,7 @@ class _GeoComponent extends Question {
 
         return [
             <div>
+                <AddressComponent {...this.getAddressProps()} />
                 <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
 
                 <div className={'coordinate'}>

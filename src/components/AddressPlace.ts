@@ -4,7 +4,7 @@ export default class AddressPlace {
     readonly lat: number;
     readonly lng: number;
     //nazev ulice - optional
-    readonly addressTitle: string | null;
+    readonly addressTitle: string | null | undefined;
     //cislo popisne
     readonly buildingIdentifier: number;
     //cislo orientacni - optional
@@ -22,6 +22,6 @@ export default class AddressPlace {
         this.buildingIdentifier = buildingIdentifier;
         this.addressNumber = addressNumber;
         this.postalCode = postalCode;
-        this.city = city;
+        this.city = city.trim();
     }
 }

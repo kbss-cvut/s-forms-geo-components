@@ -65,10 +65,31 @@ export default class AddressPlaceParser {
                 return component.getElementsByTagName("ad:designator")[0];
             }
         });
-        if (!addressNumberComponent)
+
+        let addressNumber : number | null = parseInt(addressNumberComponent?.textContent);
+        if (!addressNumberComponent) {
             console.warn("Address number could not be parsed from INSPIRE AD GML response.");
+            addressNumber = null;
+        }
 
         return new AddressPlace(parseInt(addressCode), parseFloat(coords[0]), parseFloat(coords[1]), addressTitleComponent?.getAttribute("xlink:title"),
-            cityComponent.getAttribute("xlink:title"), buildingIdentifierComponent.textContent, addressNumberComponent?.textContent, postalCodeComponent.getAttribute("xlink:title"));
+            cityComponent.getAttribute("xlink:title"), parseInt(buildingIdentifierComponent.textContent),addressNumber , parseInt(postalCodeComponent.getAttribute("xlink:title")));
+    }
+
+    static getAddressText(addressPlace: AddressPlace): string {
+        let output = "";
+
+        if (addressPlace.addressTitle) {
+            output += addressPlace.addressTitle + " " + addressPlace.buildingIdentifier;
+
+            if (addressPlace.addressNumber) {
+                output += "/" + addressPlace.addressNumber;
+            }
+
+            output += ", ";
+        }
+
+        output +=  addressPlace.postalCode + " " + addressPlace.city;
+        return output.trim();
     }
 }
