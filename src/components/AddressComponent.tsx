@@ -37,8 +37,7 @@ export default class AddressComponent extends Question {
                     code: this.props.addressPlace.addressCode
                 });
             } catch (e) {
-                console.error(e);
-                console.error("Cannot set address text when address component is not rendered.")
+                console.error("Cannot set address text when address question is not rendered.")
             }
         }
 

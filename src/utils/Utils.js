@@ -1,5 +1,6 @@
-import {Constants as SConstants} from "@kbss-cvut/s-forms";
+import {Constants as SConstants, Question} from "@kbss-cvut/s-forms";
 import JsonLdUtils from "jsonld-utils";
+import Constants from "../Constants.js";
 
 export default class Utils {
 
@@ -85,6 +86,73 @@ export default class Utils {
     return false;
   }
 
+  static findRelatedQuestionByPropertyValue(root, property, id) {
+    let foundQuestions = [];
+    if (!root[Constants.HAS_RELATED_QUESTIONS])
+      return null;
+    for (const question of root[Constants.HAS_RELATED_QUESTIONS]) {
+      if (question[property] && question[property]['@id'] && question[property]['@id'] === id) {
+        foundQuestions.push(question);
+      }
+      const result = this.findRelatedQuestionByPropertyValue(question, property, id);
+      if (result)
+        return result;
+    }
+
+    return foundQuestions;
+  }
+
+  /**
+   * Depth first search of node structure. Returns list of all question with given property-value pair.
+   * @param root  from which node to traverse
+   * @param property  property to look for
+   * @param value wanted value
+   * @param init  first iteration marker
+   * @param foundList results list
+   * @returns {*[]}
+   */
+  static getAllQuestionsWithPropertyWithValue(root, property, value, init = true, foundList = null) {
+    let foundQuestions = foundList != null ? foundList : [];
+
+    let formBaseQuestions;
+    if (init) {
+      formBaseQuestions = root[Constants.HAS_RELATED_QUESTIONS][0][Constants.HAS_RELATED_QUESTIONS];
+    } else
+      formBaseQuestions = root[Constants.HAS_RELATED_QUESTIONS];
+
+    if (!formBaseQuestions) return foundQuestions;
+
+    for (const question of formBaseQuestions) {
+      if (this.hasPropertyWithValue(question, property, value)) {
+        foundQuestions.push(question);
+      }
+
+      foundQuestions = (this.getAllQuestionsWithPropertyWithValue(question, property, value, false, foundQuestions));
+    }
+    return foundQuestions;
+  }
+
+  static findSharedParent(root, questions) {
+    const qs = questions;
+    let tempParents = [];
+    for (let question of qs) {
+      tempParents.push(this.findParent(root, question['@id']));
+    }
+
+    tempParents.reduce((previousValue, currentValue) => previousValue[Constants.HAS_RELATED_QUESTION_LEVEL] < currentValue[Constants.HAS_RELATED_QUESTION_LEVEL] ? previousValue : currentValue);
+    return tempParents[0];
+  }
+
+  /**
+   * Find first direct sibling of shared parent that contains/is related question to geo component.
+   * @param root form root
+   * @param node node to find sibling for
+   */
+  static findFirstDirectSiblingOfNode(root, node) {
+    const parent = this.findParent(root, node['@id']);
+    return parent[SConstants.HAS_SUBQUESTION][0][Constants.SHOW_ADVANCED_QUESTION] ? parent[SConstants.HAS_SUBQUESTION][1] : parent[SConstants.HAS_SUBQUESTION][0];
+  }
+
   static hasSubQuestionWithValue(parent, property, value) {
 
     let subQuestions = parent[SConstants.HAS_SUBQUESTION];
@@ -128,7 +196,7 @@ export default class Utils {
     let subQuestions = parent[SConstants.HAS_SUBQUESTION];
     if (subQuestions && subQuestions.length) {
       for (let subQuestion of subQuestions) {
-        if (subQuestion[property]["@id"] === value) {
+        if (subQuestion && subQuestion[property]["@id"] === value) {
           return subQuestion;
         }
       }

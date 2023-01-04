@@ -34,7 +34,17 @@ export default class GeoComponents {
       },
       {
         component: GeoComponent,
+        mapRule: (q, form) => this.isGeoComponentQuestion(q, form)
+      },
+      /*{
+        component: GeoComponent,
         mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE_IRI)
+      },*/
+      {
+        component: NullQuestion,
+        mapRule: (q, form) => {
+          return q[Constants.IS_PART_OF_LOCATION] && !this.isGeoComponentQuestion(q, form);
+        }
       },
       {
         component: NullQuestion,
@@ -67,6 +77,44 @@ export default class GeoComponents {
         mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_IRI)
       },
     ];
+  }
+
+  /**
+   * Checks whether question is viable to be the GeoComponent input question based on is-part-of-location property and question order.
+   * @param q
+   * @param form
+   * @returns {boolean}
+   */
+  static isGeoComponentQuestion(q, form) {
+    if (q[Constants.IS_PART_OF_LOCATION]) {
+      // get set of questions related to geo component
+      let QS = Utils.getAllQuestionsWithPropertyWithValue(form.root, Constants.IS_PART_OF_LOCATION, q[Constants.IS_PART_OF_LOCATION]);
+
+      // get shared parent for QS
+      let pQ = Utils.findSharedParent(form.root, QS);
+
+      // find first direct sibling of shared parent that contains/is related question to geo component
+      const firstSibling = Utils.findFirstDirectSiblingOfNode(form.root, pQ);
+
+      let fQ;
+
+      for (const question of QS) {
+        // if question related to geo component is direct subquestion of shared parent, then select it as GeoComponent input
+        if (question[Constants.HAS_RELATED_QUESTION_LEVEL] - pQ[Constants.HAS_RELATED_QUESTION_LEVEL] === 1) {
+          fQ = question;
+          if (q['@id'] === fQ['@id']) {
+            console.log("GeoComponent from fQ with ID: " + fQ['@id']);
+            return true;
+          }
+        }
+      }
+
+      if (q['@id'] === pQ['@id']) {
+        console.log("GeoComponent from parent question with ID: " + pQ['@id']);
+        return true;
+      }
+    }
+    return false;
   }
 
 }

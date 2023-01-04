@@ -19,19 +19,16 @@ interface Props {
 
 class _GeoComponent extends Question {
     private mapComponentRef = React.createRef<MapComponent>();
+    private locationQuestionsCache = Utils.getAllQuestionsWithPropertyWithValue(this.props.formData.root, Constants.IS_PART_OF_LOCATION, this.props.question[Constants.IS_PART_OF_LOCATION]);
 
     constructor(props: Props) {
         super(props);
 
-
-        const addressQuestion = this.findRelatedQuestionByPropertyValue(this.props.formData.root, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_IRI);
-        if (!addressQuestion)
-            console.warn("No address question with value: " + Constants.ADDRESS_IRI + " for property: " + Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET);
+        console.log(this.props.question);
 
         this.state = {
             latitude: Constants.DEFAULT_COORDINATES[0],
-            longitude: Constants.DEFAULT_COORDINATES[1],
-            addressQuestion: addressQuestion
+            longitude: Constants.DEFAULT_COORDINATES[1]
         };
 
         console.log("Geo component init");
@@ -41,7 +38,7 @@ class _GeoComponent extends Question {
         if (!root[Constants.HAS_RELATED_QUESTIONS])
             return null;
         for (const question of root[Constants.HAS_RELATED_QUESTIONS]) {
-            if (question[property] && question[property]['@id'] && question[property]['@id'] == id) {
+            if (question[property] && question[property]['@id'] && question[property]['@id'] === id) {
                 return question;
             }
             const result = this.findRelatedQuestionByPropertyValue(question, property, id);
@@ -52,10 +49,10 @@ class _GeoComponent extends Question {
         return null;
     }
 
-    getLongitudeProps(question: any) {
+    getCoordinateProps(coordinateQuestion: any) {
         return {
-            question: question.q,
-            index: question.index,
+            question: coordinateQuestion,
+            //index: question.index,
             collapsible: this.props.collapsible,
             formData: this.props.formData,
             onChange: this.props.onChange,
@@ -63,10 +60,10 @@ class _GeoComponent extends Question {
         }
     }
 
-    getAddressProps() {
+    getAddressQuestionProps(addressQuestion: any) {
         return {
-            question: this.state.addressQuestion,
-            index: this.state.addressQuestion.index,
+            question: addressQuestion,
+            //index: addressQuestion.index,
             collapsible: this.props.collapsible,
             formData: this.props.formData,
             onChange: this.props.onChange,
@@ -106,41 +103,47 @@ class _GeoComponent extends Question {
         this.mapComponentRef.current?.onAddressPlacePicked(String(addressPlace.lat), String(addressPlace.lng));
     }
 
+    isAddressComponentQuestion = () => {
+        return this.props.question[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] == Constants.ADDRESS_IRI;
+    }
+    locationContainsAddress = () => {
+        return this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_IRI);
+    }
+
+    locationContainsCoordinates = () => {
+        return this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LONGITUDE_IRI || q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LATITUDE_IRI);
+    }
+
+
     render(): Element | any {
-        const question = this.props.question;
-
-        const parent = Utils.findParent(this.props.formData.root, question['@id']);
-        if (!parent) {
-            return null;
-        }
-
-        const longitudeQuestionId = question[Constants.HAS_PRECEDING_QUESTION]['@id'];
-        const longitudeQuestion = Utils.findDirectChild(parent, longitudeQuestionId);
-
-        if (!longitudeQuestion) {
-            console.error('question with preceding question: cannot find question ' + longitudeQuestionId);
-            return null;
-        }
-
-        const cls = classNames(
-            'answer',
-            Question._getQuestionCategoryClass(question),
-            Question.getEmphasizedOnRelevantClass(question)
-        );
 
         return [
             <div>
-                <AddressComponent {...this.getAddressProps()} />
+                {
+                    this.isAddressComponentQuestion() &&
+                    <AddressComponent {...this.getAddressQuestionProps(this.props.question)} />
+                }
+
                 <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
 
-                <div className={'coordinate'}>
-                    <CoordinateComponent
-                        coordValue={this.state.longitude} onInput={this.onUserLongitudeInput} {...this.getLongitudeProps(longitudeQuestion)}/>
-                </div>
-
-                <div className={'coordinate'}>
-                    <CoordinateComponent coordValue={this.state.latitude} onInput={this.onUserLatitudeInput} {...this.props}/>
-                </div>
+                {
+                    this.isAddressComponentQuestion() && this.locationContainsCoordinates() &&
+                    <>
+                    <div className={'coordinate'}>
+                        <CoordinateComponent
+                            coordValue={this.state.longitude}
+                            onInput={this.onUserLongitudeInput} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LONGITUDE_IRI))}/>
+                    </div>
+                    <div className={'coordinate'}>
+                        <CoordinateComponent coordValue={this.state.latitude}
+                                             onInput={this.onUserLatitudeInput} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LATITUDE_IRI))}/>
+                    </div>
+                    </>
+                }
+                {
+                    !this.isAddressComponentQuestion() && this.locationContainsAddress() &&
+                    <AddressComponent {...this.getAddressQuestionProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_IRI))} />
+                }
             </div>
         ];
     }

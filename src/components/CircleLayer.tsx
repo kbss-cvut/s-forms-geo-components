@@ -24,7 +24,7 @@ export default class CircleLayer extends React.Component<Props, any> {
         >
             {
                 this.props.tooltipText &&
-                <Tooltip className={"cursor-pointer"} direction="bottom" offset={[0, 10]} opacity={1} permanent>
+                <Tooltip className={"cursor-pointer"} direction="bottom" offset={[0, 10]} opacity={1} permanent interactive>
                     {this.props.tooltipText}
                 </Tooltip>
             }

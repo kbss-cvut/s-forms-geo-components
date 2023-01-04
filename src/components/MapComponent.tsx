@@ -1,5 +1,5 @@
 import React, {useState} from "react";
-import {LayersControl, MapContainer, Marker, TileLayer, Tooltip, useMapEvents} from 'react-leaflet';
+import {Circle, LayersControl, MapContainer, Marker, Popup, TileLayer, Tooltip, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import L, {LatLng, LatLngExpression, Map as LeafletMap} from 'leaflet';
 // @ts-ignore
@@ -12,6 +12,9 @@ import LocateIcon from "./LocateIcon";
 import CircleLayer from "./CircleLayer";
 import AddressPlaceMarker from "./AddressPlaceMarker";
 import AddressPlace from "./AddressPlace";
+import {Button} from "react-bootstrap";
+import inspire_address_api from "../api/inspire_address_api";
+import AddressPlaceParser from "../utils/AddressPlaceParser";
 
 let DefaultIcon = L.icon({
     iconUrl: icon,
@@ -46,6 +49,9 @@ function LocationMarker(props: MarkerProps) {
 
     return markerCoords === null ? null : (
         <Marker position={markerCoords}>
+            <Popup>
+                <Button onClick={() => {this.props.onPick(this.state.addressPlace)}}>Fill in the form</Button>
+            </Popup>
         </Marker>
     )
 }
@@ -201,6 +207,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                 //Try to render address place near the center of the map only when zoomed 19 and more
                                 this.state.canRenderClosestAddressPlace && this.mapRef.current &&
                                 <AddressPlaceMarker coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked}/>
+
                             }
 
                             {
