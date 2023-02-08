@@ -15,7 +15,8 @@ const iconAddressPlace = L.icon({
 
 interface Props {
     coords: LatLng,
-    onPick: (addressPlace: AddressPlace) => void
+    onPick: (addressPlace: AddressPlace) => void,
+    handleMarkerClick: (addressPlace: AddressPlace) => void
 }
 
 interface State {
@@ -32,7 +33,7 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
             inputCoords: null,
             addressPlace: null,
             addressPlaces: null
-        }
+        };
     }
 
     getFeatureByPoint() {
@@ -84,7 +85,7 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
         //Try to request feature by point when component updates - props change => user interacts with map
         if (this.props.coords.lng != this.state.inputCoords?.lng || this.props.coords.lat != this.state.inputCoords?.lat) {
             this.getAddressesByBBOX()
-            //this.getFeatureByPoint()
+            //this.getFeatureByPoint();
         }
     }
 
@@ -94,11 +95,13 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
 
         const addressPlacesMarkers = this.state.addressPlaces.map((addressPlace, index) => {
             return (
-                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={iconAddressPlace}>
-                    <Popup closeOnClick={true} autoClose={true} autoPan={false} keepInView={true}>
+                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={iconAddressPlace} eventHandlers={{
+                        click: () => this.props.handleMarkerClick(addressPlace),
+                    }}>
+                    {/*<Popup onOpen={() => null}>
                         {addressPlace.addressCode} <br/>
                         {addressPlace.addressTitle != null ? addressPlace.addressTitle : addressPlace.city} {" "} {addressPlace.buildingIdentifier}
-                        {addressPlace.addressNumber && "/" + addressPlace.addressNumber}
+                        {addressPlace.addressNumber != null ? "/" + addressPlace.addressNumber : ""}
                         <br/>
                         {addressPlace.lat} <br/>
                         {addressPlace.lng} <br/>
@@ -107,7 +110,7 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
                         <Button onClick={() => {
                             this.props.onPick(addressPlace)
                         }}>Fill in the form</Button>
-                    </Popup>
+                    </Popup>*/}
                 </Marker>
             )
         });
@@ -116,29 +119,5 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
             return null;
 
         return addressPlacesMarkers;
-
-        /*if (!this.state.addressPlace)
-            return null;
-
-        const element = (
-            <Marker position={new LatLng(this.state.addressPlace.lat, this.state.addressPlace.lng)}
-                    icon={iconAddressPlace}>
-                <Popup closeOnClick={true} autoClose={true} autoPan={false} keepInView={true}>
-                    {this.state.addressPlace.addressCode} <br/>
-                    {this.state.addressPlace.addressTitle != null ? this.state.addressPlace.addressTitle : this.state.addressPlace.city} {" "} {this.state.addressPlace.buildingIdentifier}
-                    {this.state.addressPlace.addressNumber && "/" + this.state.addressPlace.addressNumber}
-                    <br/>
-                    {this.state.addressPlace.lat} <br/>
-                    {this.state.addressPlace.lng} <br/>
-                    {this.state.addressPlace.city} <br/>
-                    {this.state.addressPlace.postalCode} <br/><br/>
-                    <Button onClick={() => {this.props.onPick(this.state.addressPlace)}}>Fill in the form</Button>
-                </Popup>
-            </Marker>
-        );
-
-        console.log(element);
-
-        return element;*/
     }
 }

@@ -70,10 +70,13 @@ export default class AddressPlaceParser {
             }
         });
 
-        let addressNumber : number | null = parseInt(addressNumberComponent?.textContent);
+        let addressNumber : number | null = null;
         if (!addressNumberComponent && traceOn) {
             console.warn("Address number could not be parsed from INSPIRE AD GML response.");
-            addressNumber = null;
+        }
+
+        if (addressNumberComponent) {
+            addressNumber = parseInt(addressNumberComponent.textContent);
         }
 
         return new AddressPlace(parseInt(addressCode), parseFloat(coords[1]), parseFloat(coords[0]), addressTitleComponent?.getAttribute("xlink:title"),

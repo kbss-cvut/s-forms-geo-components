@@ -72,10 +72,11 @@ class _GeoComponent extends Question {
         }
     }
 
-    onMarkerLocationChange = (latitude: number, longitude: number) => {
+    onMarkerLocationPicked = (latitude: number, longitude: number) => {
         this.setState({
             latitude: latitude,
-            longitude: longitude
+            longitude: longitude,
+            addressPlace: null,
         });
     }
 
@@ -100,7 +101,7 @@ class _GeoComponent extends Question {
             longitude: addressPlace.lng,
             addressPlace: addressPlace
         });
-        this.mapComponentRef.current?.onAddressPlacePicked(String(addressPlace.lat), String(addressPlace.lng));
+        this.mapComponentRef.current?.onAddressPlacePicked(addressPlace.lat, addressPlace.lng);
     }
 
     isAddressComponentQuestion = () => {
@@ -124,7 +125,7 @@ class _GeoComponent extends Question {
                     <AddressComponent {...this.getAddressQuestionProps(this.props.question)} />
                 }
 
-                <MapComponent onMarkerLocationChange={this.onMarkerLocationChange} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
+                <MapComponent onMarkerLocationPicked={this.onMarkerLocationPicked} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
 
                 {
                     this.isAddressComponentQuestion() && this.locationContainsCoordinates() &&

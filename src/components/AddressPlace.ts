@@ -1,3 +1,5 @@
+import Constants from "../Constants";
+
 export default class AddressPlace {
     //kod adresniho mista
     readonly addressCode: number;
@@ -23,5 +25,26 @@ export default class AddressPlace {
         this.addressNumber = addressNumber;
         this.postalCode = postalCode;
         this.city = city.trim();
+    }
+
+    toHTMLString() {
+        let html = "";
+        html += (this.addressCode + "<br/>\n");
+
+        this.addressTitle != null ? html += this.addressTitle : html += this.city;
+
+        html += " " + this.buildingIdentifier;
+
+        this.addressNumber != null ? html += "/" + this.addressNumber : null;
+
+        html += "<br/>\n";
+        html += this.lat + " z.š.<br/>\n";
+        html += this.lng + " z.d.<br/>\n";
+        html += this.city + "<br/>\n";
+        html += this.postalCode + "<br/>\n";
+
+        html += "<button id=" + Constants.ADDRESS_PLACE_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary\">Fill in the form</button>";
+
+        return html;
     }
 }

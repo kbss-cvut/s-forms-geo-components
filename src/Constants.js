@@ -23,6 +23,8 @@ export default class Constants {
 
     static HAS_RELATED_QUESTION_LEVEL = 'http://onto.fel.cvut.cz/ontologies/kodi/sgov2sforms/has-related-question-level';
 
+    static ADDRESS_PLACE_PICK_BUTTON = 'address_place_pick_button';
+
     static LAYOUT_TYPE = 'nice';
     static LAYOUT_TYPE_QUESTION = 'type-question';
     static LAYOUT_STICKY = 'sticky';
