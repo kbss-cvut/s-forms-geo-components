@@ -43,7 +43,8 @@ export default class AddressPlace {
         html += this.city + "<br/>\n";
         html += this.postalCode + "<br/>\n";
 
-        html += "<button id=" + Constants.ADDRESS_PLACE_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary\">Fill in the form</button>";
+        html += "<button id=" + Constants.ADDRESS_PLACE_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary\">Fill in the form</button> <br/>";
+        html += "<button id=" + Constants.ADDRESS_PLACE_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary\">Close</button>";
 
         return html;
     }

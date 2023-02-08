@@ -1,13 +1,13 @@
 import React from 'react';
-import {ConfigurationContext, FormQuestionsContext, Question} from '@kbss-cvut/s-forms';
+import {ConfigurationContext, FormQuestionsContext, Question, Constants as SConstants} from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
-import classNames from 'classnames';
 import Utils from "../utils/Utils";
 import MapComponent from "./MapComponent";
 import PropTypes from "prop-types";
 import CoordinateComponent from "./CoordinateComponent";
 import AddressPlace from "./AddressPlace";
 import AddressComponent from "./AddressComponent";
+import AddressTextComponent from "./AddressTextComponent";
 
 interface Props {
     index: number,
@@ -63,6 +63,18 @@ class _GeoComponent extends Question {
     getAddressQuestionProps(addressQuestion: any) {
         return {
             question: addressQuestion,
+            //index: addressQuestion.index,
+            collapsible: this.props.collapsible,
+            formData: this.props.formData,
+            onChange: this.props.onChange,
+            withoutCard: this.props.withoutCard,
+            addressPlace: this.state.addressPlace
+        }
+    }
+
+    getAddressTextQuestionProps(addressTextQuestion: any) {
+        return {
+            question: addressTextQuestion,
             //index: addressQuestion.index,
             collapsible: this.props.collapsible,
             formData: this.props.formData,
@@ -139,6 +151,11 @@ class _GeoComponent extends Question {
                         <CoordinateComponent coordValue={this.state.latitude}
                                              onInput={this.onUserLatitudeInput} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LATITUDE_IRI))}/>
                     </div>
+                        {this.isAddressComponentQuestion() &&
+                            <div className={'address-text'}>
+                                <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))}/>
+                            </div>
+                        }
                     </>
                 }
                 {

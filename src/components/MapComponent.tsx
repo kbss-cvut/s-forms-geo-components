@@ -27,8 +27,7 @@ const position = Constants.DEFAULT_COORDINATES;
 
 interface Props {
     onAddressPlacePicked: (addressPlace: AddressPlace) => void,
-    onMarkerLocationPicked: (latitude: number, longitude: number) => void,
-    onChange?: (latitude: number, longitude: number) => void
+    onMarkerLocationPicked: (latitude: number, longitude: number) => void
 }
 
 interface MarkerProps extends Props {
@@ -40,7 +39,6 @@ function LocationMarker(props: MarkerProps) {
     const map = useMapEvents({
         click(e) {
             setMarkerCoords(new LatLng(e.latlng.lat, e.latlng.lng));
-            props.onChange?.(e.latlng.lat, e.latlng.lng);
         }
     });
 
@@ -131,13 +129,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
             isAddressPlacePicked: true,
             pickedAddressPlaceCoords: [parseFloat(latitude), parseFloat(longitude)]
         });
-    }
-
-    onMapClick = (latitude: number, longitude: number) => {
-        this.updateMapCenter(latitude, longitude);
-        if (this.state.isAddressPlacePicked) {
-            this.setState({isAddressPlacePicked: false});
-        }
+        this.mapRef.current?.closePopup();
     }
 
     updateMapCenter = (latitude: number, longitude: number) => {
@@ -176,8 +168,9 @@ export default class MapComponent extends React.Component<Props, MapState> {
             duration: 0.375
         });*/
         document.querySelector(".leaflet-popup")?.remove();
-        this.mapRef.current?.openPopup(addressPlace.toHTMLString(), new LatLng(addressPlace.lat+0.000065, addressPlace.lng));
+        this.mapRef.current?.openPopup(addressPlace.toHTMLString(), new LatLng(addressPlace.lat+0.000065, addressPlace.lng), {closeButton:false});
         document.getElementById(Constants.ADDRESS_PLACE_PICK_BUTTON)?.addEventListener('click', () => this.props.onAddressPlacePicked(addressPlace));
+        document.getElementById(Constants.ADDRESS_PLACE_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
     }
 
     render() {
@@ -226,7 +219,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                             {
                                 this.state.showLocationMarker &&
-                                <LocationMarker {...this.props} onChange={this.updateMapCenter}/>
+                                <LocationMarker {...this.props}/>
                             }
 
                             {

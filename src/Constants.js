@@ -18,12 +18,12 @@ export default class Constants {
     static LONGITUDE_IRI = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-délka';
     static LATITUDE_IRI = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-šírka';
     static ADDRESS_IRI = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/adresa';
-
     static ADDRESS_TEXT = 'https://slovník.gov.cz/generický/adresy/pojem/text-adresy';
 
     static HAS_RELATED_QUESTION_LEVEL = 'http://onto.fel.cvut.cz/ontologies/kodi/sgov2sforms/has-related-question-level';
 
     static ADDRESS_PLACE_PICK_BUTTON = 'address_place_pick_button';
+    static ADDRESS_PLACE_CLOSE_BUTTON = 'address_place_cl_button';
 
     static LAYOUT_TYPE = 'nice';
     static LAYOUT_TYPE_QUESTION = 'type-question';

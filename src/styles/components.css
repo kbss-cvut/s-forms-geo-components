@@ -145,9 +145,17 @@
 }
 
 .coordinate {
-    display: inline-flex;
+    display: inline-block;
     width: 240px;
     margin-left: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.address-text {
+    display: inline-block;
+    width: 500px;
+    margin-left: 1.5rem;
+    margin-right: 0;
     margin-bottom: 0.5rem;
 }
 
