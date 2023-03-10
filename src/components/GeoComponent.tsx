@@ -2,12 +2,12 @@ import React from 'react';
 import {ConfigurationContext, FormQuestionsContext, Question, Constants as SConstants} from '@kbss-cvut/s-forms';
 import Constants from '../Constants';
 import Utils from "../utils/Utils";
-import MapComponent from "./MapComponent";
+import MapComponent from "./map/MapComponent";
 import PropTypes from "prop-types";
-import CoordinateComponent from "./CoordinateComponent";
-import AddressPlace from "./AddressPlace";
-import AddressComponent from "./AddressComponent";
-import AddressTextComponent from "./AddressTextComponent";
+import CoordinateComponent from "./coordinates/CoordinateComponent";
+import AddressPlace from "../model/AddressPlace";
+import AddressComponent from "./address/AddressComponent";
+import AddressTextComponent from "./address/AddressTextComponent";
 
 interface Props {
     index: number,
@@ -32,21 +32,6 @@ class _GeoComponent extends Question {
         };
 
         console.log("Geo component init");
-    }
-
-    findRelatedQuestionByPropertyValue(root: Question, property: string, id: string): Question | null {
-        if (!root[Constants.HAS_RELATED_QUESTIONS])
-            return null;
-        for (const question of root[Constants.HAS_RELATED_QUESTIONS]) {
-            if (question[property] && question[property]['@id'] && question[property]['@id'] === id) {
-                return question;
-            }
-            const result = this.findRelatedQuestionByPropertyValue(question, property, id);
-            if (result)
-                return result;
-        }
-
-        return null;
     }
 
     getCoordinateProps(coordinateQuestion: any) {
@@ -104,7 +89,6 @@ class _GeoComponent extends Question {
             latitude: latitudeInput
         });
         this.mapComponentRef.current?.relocateBasedOnUserInput(latitudeInput, this.state.longitude);
-
     }
 
     onAddressPlacePicked = (addressPlace : AddressPlace) => {
@@ -113,12 +97,27 @@ class _GeoComponent extends Question {
             longitude: addressPlace.lng,
             addressPlace: addressPlace
         });
-        this.mapComponentRef.current?.onAddressPlacePicked(addressPlace.lat, addressPlace.lng);
+        this.mapComponentRef.current?.onAddressPlacePicked(addressPlace);
+    }
+
+    onAddressPlaceReset = () => {
+        this.setState({
+            latitude: Constants.DEFAULT_COORDINATES[0],
+            longitude: Constants.DEFAULT_COORDINATES[1],
+            addressPlace: null
+        });
+
+        const addressQuestion = this.locationContainsAddress();
+        if (addressQuestion) {
+            const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(addressQuestion, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
+            addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
+        }
     }
 
     isAddressComponentQuestion = () => {
         return this.props.question[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] == Constants.ADDRESS_IRI;
     }
+
     locationContainsAddress = () => {
         return this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_IRI);
     }
@@ -137,7 +136,7 @@ class _GeoComponent extends Question {
                     <AddressComponent {...this.getAddressQuestionProps(this.props.question)} />
                 }
 
-                <MapComponent onMarkerLocationPicked={this.onMarkerLocationPicked} onAddressPlacePicked={this.onAddressPlacePicked} ref={this.mapComponentRef}/>
+                <MapComponent onMarkerLocationPicked={this.onMarkerLocationPicked} onAddressPlacePicked={this.onAddressPlacePicked} onAddressPlaceReset={this.onAddressPlaceReset} ref={this.mapComponentRef}/>
 
                 {
                     this.isAddressComponentQuestion() && this.locationContainsCoordinates() &&

@@ -121,6 +121,13 @@
     display: inline-block;
 }
 
+
+.answer-content .form-group {
+    display: block;
+    width: 100%;
+}
+
+
 .wizard-step-header.floating {
     position: fixed;
     top: 0;
@@ -159,6 +166,38 @@
     margin-bottom: 0.5rem;
 }
 
+.autocomplete {
+    background-color: white;
+    position: absolute;
+    top: 5em;
+    display: flex;
+    flex-wrap: wrap;
+    z-index: 5;
+    border-radius: 10px;
+    border: darkgray 1px solid;
+}
+
+.suggestion {
+    position: relative;
+    padding-left: 0.75em;
+    padding-bottom: 0.2em;
+    padding-top: 0.2em;
+    display: block;
+    width: 100%;
+    cursor: pointer;
+}
+.suggestion:hover {
+    background-color: lightblue;
+}
+
+.suggestion:last-of-type {
+    border-radius: 0 0 10px 10px;
+}
+
+.suggestion:first-of-type {
+    border-radius: 8px 8px 0 0;
+}
+
 .locate-icon:hover {
     background-color: rgba(230,230,230,0.93) !important;
 }
@@ -169,4 +208,14 @@
 
 .leaflet-tooltip-pane .cursor-pointer {
     cursor: pointer !important;
+}
+
+.popup-btn {
+    width: 100%;
+    margin-top: 0.25em;
+}
+
+.btn-custom {
+    background-color: #4659ff !important;
+    color: white !important;
 }

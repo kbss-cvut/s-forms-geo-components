@@ -271,6 +271,19 @@ export default class Utils {
     return Object.values(set).every(el => el === 2);
   }
 
+
+  static getAddressPlacesTestingSample() {
+    return [
+      {addressText: "Test address 20/50, 589632 CVUT FEL"},
+      {addressText: "Test address 20, 589632 CVUT FEL"},
+      {addressText: "Test address 20/10a, 589632 CVUT FEL"},
+      {addressText: "Test address 20/50, 589632 CVUT FEL"},
+      {addressText: "Test address 20/50, 589632 CVUT FEL"},
+      {addressText: "Test address 20/50, 589632 CVUT FEL"},
+      {addressText: "Test address 20/50, 589632 CVUT FEL"}
+    ]
+  }
+
   // static _findQuestion(question, id) {
   //
   //   if (question['@id'] === id) {

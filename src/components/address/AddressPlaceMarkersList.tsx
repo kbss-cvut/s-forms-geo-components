@@ -1,22 +1,31 @@
 import React from "react";
 import L, {LatLng} from 'leaflet';
 import {CircleMarker, Marker, Popup} from "react-leaflet";
-import inspire_address_api from "../api/inspire_address_api";
-import AddressPlace from "./AddressPlace";
-import AddressPlaceParser from "../utils/AddressPlaceParser";
+import inspire_address_api from "../../api/inspire_address_api";
+import AddressPlace from "../../model/AddressPlace";
+import AddressPlaceParser from "../../utils/AddressPlaceParser";
 import {Button} from "react-bootstrap";
 
 const iconAddressPlace = L.icon({
-    iconUrl: require("../img/geo-fill.svg"),
+    iconUrl: require("../../img/geo-fill.svg"),
     iconSize: [32, 44],
     iconAnchor: [16, 44],
     popupAnchor: [0,-40]
 });
 
+const iconPickedAddressPlace = L.icon({
+    iconUrl: require("../../img/geo-fill-selected.svg"),
+    iconSize: [36, 48],
+    iconAnchor: [20, 48],
+    popupAnchor: [0,-40]
+});
+
+
 interface Props {
     coords: LatLng,
     onPick: (addressPlace: AddressPlace) => void,
-    handleMarkerClick: (addressPlace: AddressPlace) => void
+    handleMarkerClick: (addressPlace: AddressPlace) => void,
+    pickedAddressPlace: AddressPlace | null
 }
 
 interface State {
@@ -25,15 +34,16 @@ interface State {
     addressPlaces: AddressPlace[] | null
 }
 
-export default class AddressPlaceMarker extends React.Component<Props, State> {
+export default class AddressPlaceMarkersList extends React.Component<Props, State> {
     constructor(props: Props) {
         super(props);
 
         this.state = {
             inputCoords: null,
-            addressPlace: null,
+            addressPlace: this.props.pickedAddressPlace,
             addressPlaces: null
         };
+        console.log(this.props.pickedAddressPlace?.addressCode);
     }
 
     getFeatureByPoint() {
@@ -64,7 +74,6 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
 
                     this.setState({
                         inputCoords: new LatLng(this.props.coords.lat, this.props.coords.lng),
-                        addressPlace: addressPlaces1[0],
                         addressPlaces: addressPlaces1
                     });
 
@@ -82,6 +91,11 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
     }
 
     componentDidUpdate() {
+        if (this.props.pickedAddressPlace && this.state.addressPlace?.addressCode !== this.props.pickedAddressPlace.addressCode) {
+            this.setState({
+                addressPlace: this.props.pickedAddressPlace
+            })
+        }
         //Try to request feature by point when component updates - props change => user interacts with map
         if (this.props.coords.lng != this.state.inputCoords?.lng || this.props.coords.lat != this.state.inputCoords?.lat) {
             this.getAddressesByBBOX()
@@ -95,28 +109,17 @@ export default class AddressPlaceMarker extends React.Component<Props, State> {
 
         const addressPlacesMarkers = this.state.addressPlaces.map((addressPlace, index) => {
             return (
-                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={iconAddressPlace} eventHandlers={{
+                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={this.state.addressPlace?.addressCode === addressPlace.addressCode ? iconPickedAddressPlace : iconAddressPlace} eventHandlers={{
                         click: () => this.props.handleMarkerClick(addressPlace),
                     }}>
-                    {/*<Popup onOpen={() => null}>
-                        {addressPlace.addressCode} <br/>
-                        {addressPlace.addressTitle != null ? addressPlace.addressTitle : addressPlace.city} {" "} {addressPlace.buildingIdentifier}
-                        {addressPlace.addressNumber != null ? "/" + addressPlace.addressNumber : ""}
-                        <br/>
-                        {addressPlace.lat} <br/>
-                        {addressPlace.lng} <br/>
-                        {addressPlace.city} <br/>
-                        {addressPlace.postalCode} <br/><br/>
-                        <Button onClick={() => {
-                            this.props.onPick(addressPlace)
-                        }}>Fill in the form</Button>
-                    </Popup>*/}
+                    {
+                        /**
+                         * Popup gets added in MapComponent due to better modifiability and control. Might create custom popup component later for needed behaviour.
+                         */
+                    }
                 </Marker>
             )
         });
-
-        if (!addressPlacesMarkers)
-            return null;
 
         return addressPlacesMarkers;
     }

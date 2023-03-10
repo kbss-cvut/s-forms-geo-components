@@ -1,4 +1,4 @@
-import AddressPlace from "../components/AddressPlace";
+import AddressPlace from "../model/AddressPlace";
 
 export default class AddressPlaceParser {
     /**

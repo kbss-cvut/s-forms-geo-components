@@ -4,6 +4,7 @@ import NullQuestion from "./components/NullQuestion";
 import Utils from "./utils/Utils.js";
 import NiceComponent from "./components/NiceComponent";
 import GeoComponent from "./components/GeoComponent.tsx";
+import AddressTextComponent from "./components/address/AddressTextComponent";
 
 export default class GeoComponents {
 
@@ -35,6 +36,10 @@ export default class GeoComponents {
       {
         component: GeoComponent,
         mapRule: (q, form) => this.isGeoComponentQuestion(q, form)
+      },
+      {
+        component: AddressTextComponent,
+        mapRule: q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET] && q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT
       },
       /*{
         component: GeoComponent,
