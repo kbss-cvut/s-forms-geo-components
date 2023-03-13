@@ -1,6 +1,6 @@
-import L, { LatLng } from "leaflet";
+import L, { LatLng, LeafletMouseEventHandlerFn } from "leaflet";
 import AddressPlace from "../../model/AddressPlace";
-import React, { useState } from "react";
+import React, { MouseEventHandler, useState } from "react";
 import { Marker, Popup, useMapEvents } from "react-leaflet";
 import { Button } from "react-bootstrap";
 // @ts-ignore
@@ -41,7 +41,10 @@ export default function GeneralLocationMarker(props: MarkerProps) {
       <Popup closeButton={false}>
         {markerCoords.lat.toFixed(7) + " z. š."} <br/>
         {markerCoords.lng.toFixed(7) + " z. d."} <br/>
-        <Button className={"btn-primary popup-btn"} onClick={() => {props.onMarkerLocationPicked(markerCoords.lat, markerCoords.lng)}}>Fill in the form</Button>
+        <Button className={"btn-primary popup-btn"}
+                onClick={(e) => {
+          e.stopPropagation();
+          props.onMarkerLocationPicked(markerCoords.lat, markerCoords.lng)}}>Fill in the form</Button>
         <Button className={"btn-secondary popup-btn"} onClick={() => map.closePopup()}>Close</Button>
       </Popup>
     </Marker>

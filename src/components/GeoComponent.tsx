@@ -75,7 +75,7 @@ class _GeoComponent extends Question {
             longitude: longitude,
             addressPlace: null,
         });
-        this.mapComponentRef.current?.onMarkerLocationPicked();
+        this.mapComponentRef.current?.onMarkerLocationPicked(latitude, longitude);
     }
 
     onUserLongitudeInput = (longitudeInput: string) => {
@@ -113,6 +113,8 @@ class _GeoComponent extends Question {
             const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(addressQuestion, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
             addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
         }
+
+        this.mapComponentRef.current?.onAddressPlaceReset();
     }
 
     isAddressComponentQuestion = () => {

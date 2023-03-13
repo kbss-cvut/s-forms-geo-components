@@ -1,7 +1,7 @@
 import React from "react";
 import { LayersControl, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import { LatLng, Map as LeafletMap } from "leaflet";
+import L, { LatLng, LatLngExpression, Map as LeafletMap } from "leaflet";
 // @ts-ignore
 import icon from "leaflet/dist/images/marker-icon.png";
 // @ts-ignore
@@ -15,6 +15,20 @@ import AddressPlace from "../../model/AddressPlace";
 import { Button } from "react-bootstrap";
 import SelectedAddressPlaceMarker from "../address/SelectedAddressPlaceMarker";
 import GeneralLocationMarker from "./GeneralLocationMarker";
+import SelectedGeneralLocationMarker from "./SelectedGeneralLocationMarker";
+
+/**
+ * Default icon loaded from Leaflet. Must be here in order to render default leaflet marker icon.
+ */
+let DefaultIcon = L.icon({
+    iconUrl: icon,
+    shadowUrl: iconShadow,
+    iconSize: [32, 44],
+    iconAnchor: [16, 44],
+    popupAnchor: [0, -45]
+});
+
+L.Marker.prototype.options.icon = DefaultIcon;
 
 const defaultPosition = Constants.DEFAULT_COORDINATES;
 
@@ -30,7 +44,8 @@ interface MapState {
     showLocationMarker: boolean,
     pickedAddressPlace: AddressPlace | null,
     userLocation: GeolocationPosition | null,
-    canRenderClosestAddressPlace: boolean
+    canRenderClosestAddressPlace: boolean,
+    pickedLocationCoords: LatLngExpression | null
 }
 
 export default class MapComponent extends React.Component<Props, MapState> {
@@ -43,6 +58,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
             showLocationMarker: true,
             showUserLocationCircle: false,
             pickedAddressPlace: null,
+            pickedLocationCoords: null,
             userLocation: null,
             canRenderClosestAddressPlace: false
         }
@@ -102,11 +118,16 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     onAddressPlaceReset() {
-        this.props.onAddressPlaceReset();
         if (this.state.pickedAddressPlace)
             this.setState({
                 pickedAddressPlace: null
             });
+
+        if (this.state.pickedLocationCoords)
+            this.setState({
+                pickedLocationCoords: null
+            });
+
         this.updateMapCenter(defaultPosition[0], defaultPosition[1], 7);
     }
 
@@ -154,8 +175,11 @@ export default class MapComponent extends React.Component<Props, MapState> {
         document.getElementById(Constants.ADDRESS_PLACE_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
     }
 
-    onMarkerLocationPicked = () => {
+    onMarkerLocationPicked = (latitude: number, longitude: number) => {
         this.mapRef.current?.closePopup();
+        this.setState({
+            pickedLocationCoords: new LatLng(latitude, longitude)
+        })
     }
 
     render() {
@@ -188,8 +212,13 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             }
 
                             {
-                                this.state.showLocationMarker &&
+                                this.state.showLocationMarker && !this.state.pickedLocationCoords &&
                                 <GeneralLocationMarker {...this.props}/>
+                            }
+
+                            {
+                              this.state.pickedLocationCoords &&
+                              <SelectedGeneralLocationMarker coords={this.state.pickedLocationCoords}/>
                             }
 
                             {
@@ -200,7 +229,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             </Control>
 
                             <Control position='bottomleft'>
-                                <Button size='sm' className={'btn-custom'} onClick={() => this.onAddressPlaceReset()}>Clear form</Button>
+                                <Button size='sm' className={'btn-custom'} onClick={() => this.props.onAddressPlaceReset()}>Clear form</Button>
                             </Control>
                     </MapContainer>
                 </div>
