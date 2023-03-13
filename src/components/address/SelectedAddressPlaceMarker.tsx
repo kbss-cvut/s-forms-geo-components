@@ -45,7 +45,7 @@ export default class SelectedAddressPlaceMarker extends React.Component<Props, S
         return (
                 <Marker key={addressPlace.addressCode} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={iconPickedAddressPlace}
                         eventHandlers={{click: () => this.props.recenterMap(addressPlace)}}>
-                    <Tooltip className={"cursor-pointer"} direction="bottom" offset={[0, 5]} opacity={1} interactive>
+                    <Tooltip className={"cursor-pointer"} direction="bottom" offset={[0, 1]} opacity={1} interactive>
                         {addressPlace.addressCode} <br/>
                         {addressPlace.getAddressText()}
                     </Tooltip>

@@ -75,6 +75,7 @@ class _GeoComponent extends Question {
             longitude: longitude,
             addressPlace: null,
         });
+        this.mapComponentRef.current?.onMarkerLocationPicked();
     }
 
     onUserLongitudeInput = (longitudeInput: string) => {

@@ -43,7 +43,6 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
             addressPlace: this.props.pickedAddressPlace,
             addressPlaces: null
         };
-        console.log(this.props.pickedAddressPlace?.addressCode);
     }
 
     getFeatureByPoint() {
@@ -65,12 +64,14 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
         }
     }
 
-
+    /**
+     * Returns address places located in square area around the zoomed map.
+     */
     getAddressesByBBOX() {
         if (this.state.inputCoords?.lng !== this.props.coords.lng || this.state.inputCoords?.lat !== this.props.coords.lat) {
             inspire_address_api.getAddressesByBBOX(this.props.coords.lng + 0.001612, this.props.coords.lat + 0.000416, this.props.coords.lng - 0.00168, this.props.coords.lat - 0.000447)
                 .then(response => {
-                    const addressPlaces1 = AddressPlaceParser.parseAdressesFromBBOXRequest(response.data);
+                    const addressPlaces1 = AddressPlaceParser.parseAddressesFromBBOXRequest(response.data);
 
                     this.setState({
                         inputCoords: new LatLng(this.props.coords.lat, this.props.coords.lng),
@@ -85,9 +86,8 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
     }
 
     componentDidMount() {
-        //Try to initially render address place, when user is zoomed in accordingly.
+        //Try to initially render address places, when user is zoomed in accordingly.
         this.getAddressesByBBOX();
-        //this.getFeatureByPoint();
     }
 
     componentDidUpdate() {
@@ -96,10 +96,9 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
                 addressPlace: this.props.pickedAddressPlace
             })
         }
-        //Try to request feature by point when component updates - props change => user interacts with map
+        //Try to request addresses in nearby area when component updates - props change => user interacts with map
         if (this.props.coords.lng != this.state.inputCoords?.lng || this.props.coords.lat != this.state.inputCoords?.lat) {
             this.getAddressesByBBOX()
-            //this.getFeatureByPoint();
         }
     }
 

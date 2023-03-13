@@ -1,28 +1,20 @@
-import React, {useState} from "react";
-import {LayersControl, MapContainer, Popup, TileLayer, useMapEvents, Marker} from 'react-leaflet';
-import 'leaflet/dist/leaflet.css';
-import L, {LatLng, LatLngExpression, Map as LeafletMap} from 'leaflet';
+import React from "react";
+import { LayersControl, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import "leaflet/dist/leaflet.css";
+import { LatLng, Map as LeafletMap } from "leaflet";
 // @ts-ignore
-import icon from 'leaflet/dist/images/marker-icon.png';
+import icon from "leaflet/dist/images/marker-icon.png";
 // @ts-ignore
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
-import Constants from '../../Constants.js';
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import Constants from "../../Constants.js";
 import Control from "react-leaflet-custom-control";
 import LocateIcon from "./LocateIcon";
 import CircleLayer from "./CircleLayer";
 import AddressPlaceMarkersList from "../address/AddressPlaceMarkersList";
 import AddressPlace from "../../model/AddressPlace";
-import {Button, OverlayTrigger} from "react-bootstrap";
+import { Button } from "react-bootstrap";
 import SelectedAddressPlaceMarker from "../address/SelectedAddressPlaceMarker";
-
-let DefaultIcon = L.icon({
-    iconUrl: icon,
-    shadowUrl: iconShadow,
-    iconSize: [32, 44],
-    iconAnchor: [16, 44]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;
+import GeneralLocationMarker from "./GeneralLocationMarker";
 
 const defaultPosition = Constants.DEFAULT_COORDINATES;
 
@@ -31,31 +23,6 @@ interface Props {
     onMarkerLocationPicked: (latitude: number, longitude: number) => void,
     onAddressPlaceReset: () => void
 }
-
-interface MarkerProps extends Props {
-}
-
-function LocationMarker(props: MarkerProps) {
-    const [markerCoords, setMarkerCoords] = useState<LatLng | null>(null);
-
-    const map = useMapEvents({
-        click(e) {
-            setMarkerCoords(new LatLng(e.latlng.lat, e.latlng.lng));
-        }
-    });
-
-    return markerCoords === null ? null : (
-        <Marker position={markerCoords}>
-            <Popup closeButton={false} position={new LatLng(markerCoords.lat+0.000065, markerCoords.lng)}>
-                {markerCoords.lat.toFixed(7) + " z. š."} <br/>
-                {markerCoords.lng.toFixed(7) + " z. d."} <br/>
-                <Button className={"btn-primary popup-btn"} onClick={() => {props.onMarkerLocationPicked(markerCoords.lat, markerCoords.lng)}}>Fill in the form</Button>
-                <Button className={"btn-secondary popup-btn"} onClick={() => document.querySelector(".leaflet-popup")?.remove()}>Close</Button>
-            </Popup>
-        </Marker>
-    )
-}
-
 
 interface MapState {
     coords: number[],
@@ -114,11 +81,11 @@ export default class MapComponent extends React.Component<Props, MapState> {
                 coords: [geolocation.coords.latitude, geolocation.coords.longitude]
             });
             this.setState({ showUserLocationCircle: true, userLocation: geolocation});
-            if (this.mapRef != null && this.mapRef.current != null) {
-                let zoomValue;
-                geolocation.coords.accuracy <= 1000 ? zoomValue = 17 : zoomValue = 15;
-                this.mapRef.current.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude), zoomValue);
-            }
+
+            let zoomValue;
+            geolocation.coords.accuracy <= 1000 ? zoomValue = 17 : zoomValue = 15;
+
+            this.mapRef.current?.setView(new LatLng(geolocation.coords.latitude, geolocation.coords.longitude), zoomValue);
         }, error => console.warn(error.message));
     }
 
@@ -135,13 +102,12 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     onAddressPlaceReset() {
-        if (this.state.pickedAddressPlace) {
-            this.props.onAddressPlaceReset();
+        this.props.onAddressPlaceReset();
+        if (this.state.pickedAddressPlace)
             this.setState({
                 pickedAddressPlace: null
             });
-            this.updateMapCenter(defaultPosition[0], defaultPosition[1], 7);
-        }
+        this.updateMapCenter(defaultPosition[0], defaultPosition[1], 7);
     }
 
     updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
@@ -149,12 +115,6 @@ export default class MapComponent extends React.Component<Props, MapState> {
             coords: [latitude, longitude]
         });
         this.mapRef.current?.setView(new LatLng(latitude, longitude), zoom);
-    }
-
-    canRenderStreetMap() {
-        const checkbox: HTMLInputElement | null = document.querySelector(".leaflet-control-layers-selector");
-
-        return checkbox != null && !checkbox.checked;
     }
 
     handleMapInteractionEnd = () => {
@@ -183,7 +143,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
      * Manual creation of Leaflet popup by DOM manipulation, because when Popup component was used to show address place info, it was not smooth. Might create custom popup for this specific situation.
      * @param addressPlace
      */
-    handleMarkerClick = (addressPlace: AddressPlace) => {
+    handleAddressPlaceMarkerClick = (addressPlace: AddressPlace) => {
         /*this.mapRef.current?.flyTo(new LatLng(addressPlace.lat, addressPlace.lng), this.mapRef.current?.getZoom(), {
             animate: true,
             duration: 0.375
@@ -192,6 +152,10 @@ export default class MapComponent extends React.Component<Props, MapState> {
         this.mapRef.current?.openPopup(addressPlace.toHTMLString(), new LatLng(addressPlace.lat+0.000065, addressPlace.lng), {closeButton:false});
         document.getElementById(Constants.ADDRESS_PLACE_PICK_BUTTON)?.addEventListener('click', () => this.props.onAddressPlacePicked(addressPlace));
         document.getElementById(Constants.ADDRESS_PLACE_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
+    }
+
+    onMarkerLocationPicked = () => {
+        this.mapRef.current?.closePopup();
     }
 
     render() {
@@ -204,31 +168,17 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                       this.mapRef.current.addEventListener("zoomend", this.handleMapInteractionEnd);
                                       this.mapRef.current.addEventListener("moveend", this.handleMapInteractionEnd);
                                   }} >
-                        <LayersControl position="bottomleft">
-
-                            <LayersControl.Overlay name="Satellite">
-                                <TileLayer
-                                    url='https://{s}.google.com/vt/lyrs=s&x={x}&y={y}&z={z}'
-                                    subdomains={['mt1','mt2','mt3']}
-                                    maxNativeZoom={19}
-                                    maxZoom={21}
-                                />
-                            </LayersControl.Overlay>
-
-                            {
-                                this.canRenderStreetMap() &&
                                 <TileLayer
                                     attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                                     url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                                     maxNativeZoom={19}
                                     maxZoom={21}
                                 />
-                            }
 
                             {
                                 //Try to render address place near the center of the map only when zoomed 19 and more
                                 this.state.canRenderClosestAddressPlace && this.mapRef.current &&
-                                <AddressPlaceMarkersList coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked} handleMarkerClick={this.handleMarkerClick} pickedAddressPlace={this.state.pickedAddressPlace}/>
+                                <AddressPlaceMarkersList coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked} handleMarkerClick={this.handleAddressPlaceMarkerClick} pickedAddressPlace={this.state.pickedAddressPlace}/>
 
                             }
 
@@ -239,7 +189,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                             {
                                 this.state.showLocationMarker &&
-                                <LocationMarker {...this.props}/>
+                                <GeneralLocationMarker {...this.props}/>
                             }
 
                             {
@@ -252,8 +202,6 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             <Control position='bottomleft'>
                                 <Button size='sm' className={'btn-custom'} onClick={() => this.onAddressPlaceReset()}>Clear form</Button>
                             </Control>
-
-                        </LayersControl>
                     </MapContainer>
                 </div>
             );

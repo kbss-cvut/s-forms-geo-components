@@ -4,6 +4,8 @@ export default class AddressPlaceParser {
     /**
      * Function to parse GML response sent from INSPIRE AD endpoint with GetFeatureByPoint request.
      * @param gml response data
+     * @param isAlreadyParsed true when address xml objects are already parsed; default false
+     * @param traceOn true if detailed logging is wanted; default false
      */
     static parseINSPIREAddressPlace(gml: string, isAlreadyParsed = false, traceOn = false) : AddressPlace | null {
         let text: any = gml;
@@ -83,7 +85,7 @@ export default class AddressPlaceParser {
             cityComponent.getAttribute("xlink:title"), parseInt(buildingIdentifierComponent.textContent),addressNumber , parseInt(postalCodeComponent.getAttribute("xlink:title")));
     }
 
-    static parseAdressesFromBBOXRequest(gml: string): AddressPlace[] {
+    static parseAddressesFromBBOXRequest(gml: string): AddressPlace[] {
         const addressPlaces: AddressPlace[] = [];
         const parser = new DOMParser();
         let text = parser.parseFromString(gml,"text/xml");
@@ -103,6 +105,7 @@ export default class AddressPlaceParser {
             if (addressPlace.addressNumber) {
                 output += "/" + addressPlace.addressNumber;
             }
+
         } else {
             output += addressPlace.city + " " + addressPlace.buildingIdentifier;
         }
