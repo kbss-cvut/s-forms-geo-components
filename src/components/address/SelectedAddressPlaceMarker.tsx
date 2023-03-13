@@ -1,7 +1,7 @@
 import React from "react";
 import L, {LatLng} from 'leaflet';
 import AddressPlace from "../../model/AddressPlace";
-import {Marker} from "react-leaflet";
+import { Marker, Tooltip } from "react-leaflet";
 
 const iconPickedAddressPlace = L.icon({
     iconUrl: require("../../img/geo-fill-selected.svg"),
@@ -44,7 +44,12 @@ export default class SelectedAddressPlaceMarker extends React.Component<Props, S
 
         return (
                 <Marker key={addressPlace.addressCode} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={iconPickedAddressPlace}
-                        eventHandlers={{click: () => this.props.recenterMap(addressPlace)}} />
+                        eventHandlers={{click: () => this.props.recenterMap(addressPlace)}}>
+                    <Tooltip className={"cursor-pointer"} direction="bottom" offset={[0, 5]} opacity={1} interactive>
+                        {addressPlace.addressCode} <br/>
+                        {addressPlace.getAddressText()}
+                    </Tooltip>
+                </Marker>
         );
     }
 }

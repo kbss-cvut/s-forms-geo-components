@@ -233,7 +233,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                             }
 
                             {
-                                this.state.pickedAddressPlace &&
+                                this.state.pickedAddressPlace && !this.state.canRenderClosestAddressPlace &&
                                 <SelectedAddressPlaceMarker addressPlace={this.state.pickedAddressPlace} recenterMap={this.flyToPoint}/>
                             }
 

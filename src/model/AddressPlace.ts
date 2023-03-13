@@ -27,6 +27,19 @@ export default class AddressPlace {
         this.city = city.trim();
     }
 
+    getAddressText() {
+        let addressText = "";
+
+        this.addressTitle != null ? addressText += this.addressTitle : addressText += this.city;
+
+        addressText += " " + this.buildingIdentifier;
+
+        this.addressNumber != null ? addressText += "/" + this.addressNumber : null;
+
+        addressText += ", " + this.postalCode + " " + this.city;
+        return addressText;
+    }
+
     toHTMLString() {
         let html = "";
         html += (this.addressCode + "<br/>\n");
