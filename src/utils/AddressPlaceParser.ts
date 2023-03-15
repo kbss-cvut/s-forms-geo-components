@@ -65,6 +65,16 @@ export default class AddressPlaceParser {
         if (!buildingIdentifierComponent)
             throw new Error("Building identifier could not be parsed from INSPIRE AD GML response.");
 
+        const buildingIdentifierPrefixComponent = locatorDesignatorArray.find(component => {
+            const typeComponent = component.getElementsByTagName("ad:type")[0];
+            if (typeComponent && typeComponent.getAttribute("xlink:title") === "buildingIdentifierPrefix") {
+                return component.getElementsByTagName("ad:designator")[0];
+            }
+        });
+        if (!buildingIdentifierPrefixComponent)
+            throw new Error("Building identifier prefix could not be parsed from INSPIRE AD GML response.");
+
+
         const addressNumberComponent = locatorDesignatorArray.find(component => {
             const typeComponent = component.getElementsByTagName("ad:type")[0];
             if (typeComponent && typeComponent.getAttribute("xlink:title") === "addressNumber") {
@@ -81,8 +91,19 @@ export default class AddressPlaceParser {
             addressNumber = parseInt(addressNumberComponent.textContent);
         }
 
+        const addressNumberExtensionComponent = locatorDesignatorArray.find(component => {
+            const typeComponent = component.getElementsByTagName("ad:type")[0];
+            if (typeComponent && typeComponent.getAttribute("xlink:title") === "addressNumberExtension") {
+                return component.getElementsByTagName("ad:designator")[0];
+            }
+        });
+
+        if (!addressNumberExtensionComponent && traceOn) {
+            console.warn("Address number extension number could not be parsed from INSPIRE AD GML response.");
+        }
+
         return new AddressPlace(parseInt(addressCode), parseFloat(coords[1]), parseFloat(coords[0]), addressTitleComponent?.getAttribute("xlink:title"),
-            cityComponent.getAttribute("xlink:title"), parseInt(buildingIdentifierComponent.textContent),addressNumber , parseInt(postalCodeComponent.getAttribute("xlink:title")));
+            cityComponent.getAttribute("xlink:title"), parseInt(buildingIdentifierComponent.textContent), buildingIdentifierPrefixComponent.textContent, addressNumber, addressNumberExtensionComponent?.textContent, parseInt(postalCodeComponent.getAttribute("xlink:title")));
     }
 
     static parseAddressesFromBBOXRequest(gml: string): AddressPlace[] {
@@ -94,24 +115,5 @@ export default class AddressPlaceParser {
         addressPlacesGML.map(addressPlaceGML => addressPlaces.push(this.parseINSPIREAddressPlace(addressPlaceGML, true)));
 
         return addressPlaces;
-    }
-
-    static getAddressText(addressPlace: AddressPlace): string {
-        let output = "";
-
-        if (addressPlace.addressTitle) {
-            output += addressPlace.addressTitle + " " + addressPlace.buildingIdentifier;
-
-            if (addressPlace.addressNumber) {
-                output += "/" + addressPlace.addressNumber;
-            }
-
-        } else {
-            output += addressPlace.city + " " + addressPlace.buildingIdentifier;
-        }
-
-        output += ", ";
-        output +=  addressPlace.postalCode + " " + addressPlace.city;
-        return output.trim();
     }
 }

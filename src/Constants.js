@@ -19,7 +19,14 @@ export default class Constants {
     static LATITUDE_IRI = 'https://slovník.gov.cz/veřejný-sektor/pojem/zemepisná-šírka';
     static ADDRESS_IRI = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/adresa';
     static ADDRESS_TEXT = 'https://slovník.gov.cz/generický/adresy/pojem/text-adresy';
-
+    static STREET_NAME = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/má-název-ulice';
+    static HOUSE_NUMBER = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/má-číslo-domovní';
+    static HOUSE_NUMBER_TYPE = 'https://slovník.gov.cz/generický/adresy/pojem/typ-čísla-domovního';
+    static ORIENTATION_NUMBER = 'https://slovník.gov.cz/legislativní/sbírka/111/2009/pojem/číslo-orientační';
+    static ORIENTATION_NUMBER_CHARACTER = 'https://slovník.gov.cz/generický/adresy/pojem/znak-čísla-orientačního';
+    static ORIENTATION_NUMBER_EXTENSION = 'https://slovník.gov.cz/legislativní/sbírka/326/2000/pojem/dodatek-čísla-orientačního';
+    static POSTAL_CODE = 'https://slovník.gov.cz/generický/adresy/pojem/poštovní-směrovací-číslo';
+    static ADDRESS_PLACE_CODE = 'https://slovník.gov.cz/generický/adresy/pojem/má-kód-adresního-místa';
     static HAS_RELATED_QUESTION_LEVEL = 'http://onto.fel.cvut.cz/ontologies/kodi/sgov2sforms/has-related-question-level';
 
     static ADDRESS_PLACE_PICK_BUTTON = 'address_place_pick_button';

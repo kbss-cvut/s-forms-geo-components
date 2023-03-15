@@ -128,7 +128,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
                 pickedLocationCoords: null
             });
 
-        this.updateMapCenter(defaultPosition[0], defaultPosition[1], 7);
+        this.handleMapInteractionEnd();
+        //this.updateMapCenter(defaultPosition[0], defaultPosition[1]);
     }
 
     updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {

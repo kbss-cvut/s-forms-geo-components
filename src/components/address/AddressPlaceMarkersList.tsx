@@ -91,6 +91,12 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
     }
 
     componentDidUpdate() {
+        if (!this.props.pickedAddressPlace && this.state.addressPlace) {
+            this.setState({
+                addressPlace: null
+            });
+        }
+
         if (this.props.pickedAddressPlace && this.state.addressPlace?.addressCode !== this.props.pickedAddressPlace.addressCode) {
             this.setState({
                 addressPlace: this.props.pickedAddressPlace

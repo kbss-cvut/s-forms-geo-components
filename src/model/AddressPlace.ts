@@ -6,23 +6,27 @@ export default class AddressPlace {
     readonly lat: number;
     readonly lng: number;
     //nazev ulice - optional
-    readonly addressTitle: string | null | undefined;
+    readonly streetName: string | null | undefined;
     //cislo popisne
     readonly buildingIdentifier: number;
+    readonly buildingIdentifierType: string;
     //cislo orientacni - optional
-    readonly addressNumber: number | null;
+    readonly orientationNumber: number | null;
+    readonly orientationNumberExtension: string | undefined;
     //PSC
     readonly postalCode: number;
     readonly city: string;
     //todo other properties (MOP, MOMC)
 
-    constructor(addressCode: number, lat: number, lng: number, addressTitle: string | null, city: string, buildingIdentifier: number, addressNumber: number | null, postalCode: number) {
+    constructor(addressCode: number, lat: number, lng: number, streetName: string | null, city: string, buildingIdentifier: number, buildingIdentifierType: string, addressNumber: number | null, addressNumberExtension: string | null, postalCode: number) {
         this.addressCode = addressCode;
         this.lat = lat;
         this.lng = lng;
-        this.addressTitle = addressTitle;
+        this.streetName = streetName;
         this.buildingIdentifier = buildingIdentifier;
-        this.addressNumber = addressNumber;
+        this.buildingIdentifierType = buildingIdentifierType.trim();
+        this.orientationNumber = addressNumber;
+        this.orientationNumberExtension = addressNumberExtension?.trim();
         this.postalCode = postalCode;
         this.city = city.trim();
     }
@@ -30,25 +34,28 @@ export default class AddressPlace {
     getAddressText() {
         let addressText = "";
 
-        this.addressTitle != null ? addressText += this.addressTitle : addressText += this.city;
+        this.streetName != null ? addressText += this.streetName : addressText += this.city;
 
         addressText += " " + this.buildingIdentifier;
 
-        this.addressNumber != null ? addressText += "/" + this.addressNumber : null;
+        this.orientationNumber != null ? addressText += "/" + this.orientationNumber : null;
+
+        this.orientationNumberExtension != null ? addressText += this.orientationNumberExtension : null;
 
         addressText += ", " + this.postalCode + " " + this.city;
-        return addressText;
+        return addressText.trim();
     }
 
     toHTMLString() {
         let html = "";
         html += (this.addressCode + "<br/>\n");
 
-        this.addressTitle != null ? html += this.addressTitle : html += this.city;
+        this.streetName != null ? html += this.streetName : html += this.city;
 
         html += " " + this.buildingIdentifier;
 
-        this.addressNumber != null ? html += "/" + this.addressNumber : null;
+        this.orientationNumber != null ? html += "/" + this.orientationNumber : null;
+        this.orientationNumberExtension != null ? html += this.orientationNumberExtension : null;
 
         html += "<br/>\n";
         html += this.lat + " z.š.<br/>\n";
