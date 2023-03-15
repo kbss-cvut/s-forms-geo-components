@@ -81,6 +81,22 @@ export default class GeoComponents {
         component: NullQuestion,
         mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_IRI)
       },
+      {
+        component: NullQuestion,
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, "https://slovník.gov.cz/generický/vstupné/pojem/vstupné")
+      },
+      {
+        component: NullQuestion,
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, "https://slovník.gov.cz/generický/čas/pojem/časová-specifikace")
+      },
+      {
+        component: NullQuestion,
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, "https://slovník.gov.cz/generický/věci/pojem/název")
+      },
+      {
+        component: NullQuestion,
+        mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, "https://slovník.gov.cz/generický/číselníky/pojem/typ-turistického-cíle")
+      }
     ];
   }
 
