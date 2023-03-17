@@ -40,7 +40,7 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
 
         this.state = {
             inputCoords: null,
-            addressPlace: this.props.pickedAddressPlace,
+            addressPlace: null,
             addressPlaces: null
         };
     }
@@ -91,17 +91,25 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
     }
 
     componentDidUpdate() {
+
         if (!this.props.pickedAddressPlace && this.state.addressPlace) {
             this.setState({
                 addressPlace: null
             });
         }
 
-        if (this.props.pickedAddressPlace && this.state.addressPlace?.addressCode !== this.props.pickedAddressPlace.addressCode) {
+        if (this.props.pickedAddressPlace && !this.state.addressPlace) {
             this.setState({
                 addressPlace: this.props.pickedAddressPlace
-            })
+            });
         }
+
+        if (this.props.pickedAddressPlace && this.state.addressPlace && this.state.addressPlace?.addressCode !== this.props.pickedAddressPlace.addressCode) {
+            this.setState({
+                addressPlace: this.props.pickedAddressPlace
+            });
+        }
+
         //Try to request addresses in nearby area when component updates - props change => user interacts with map
         if (this.props.coords.lng != this.state.inputCoords?.lng || this.props.coords.lat != this.state.inputCoords?.lat) {
             this.getAddressesByBBOX()

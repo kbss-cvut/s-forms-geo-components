@@ -28,7 +28,8 @@ class _GeoComponent extends Question {
 
         this.state = {
             latitude: Constants.DEFAULT_COORDINATES[0],
-            longitude: Constants.DEFAULT_COORDINATES[1]
+            longitude: Constants.DEFAULT_COORDINATES[1],
+            addressPlace: null
         };
 
         console.log("Geo component init");

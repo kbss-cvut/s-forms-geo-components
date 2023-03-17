@@ -110,10 +110,10 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     onAddressPlacePicked = (addressPlace: AddressPlace) => {
-        this.updateMapCenter(addressPlace.lat, addressPlace.lng);
         this.setState({
             pickedAddressPlace: addressPlace
         });
+
         this.mapRef.current?.closePopup();
     }
 

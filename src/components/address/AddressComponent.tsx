@@ -25,7 +25,10 @@ export default class AddressComponent extends Question {
     }
 
     componentDidUpdate() {
-        if (!this.props.addressPlace) {
+        if (!this.props.addressPlace && this.state.code) {
+            this.setState({
+                code: null
+            })
             const subquestions = this.props.question[SConstants.HAS_SUBQUESTION];
 
             for (const subquestion of subquestions) {
@@ -42,11 +45,16 @@ export default class AddressComponent extends Question {
         }
 
         // Data mapping from component to questions
-        if (this.props.addressPlace.addressCode !== this.state.code) {
+        if (this.props.addressPlace) {
+            if (this.state.code && this.props.addressPlace.addressCode === this.state.code)
+                return;
+
             try {
-                this.setState({
-                    code: this.props.addressPlace.addressCode
-                });
+                if (!this.state.code) {
+                    this.setState({
+                        code: this.props.addressPlace.addressCode
+                    });
+                }
 
                 const question = this.props.question;
 
