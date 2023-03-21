@@ -11,7 +11,8 @@ import QuestionEntity from "../../model/QuestionEntity";
 
 export interface AddressProps {
     question: object,
-    addressPlace: AddressPlace
+    addressPlace: AddressPlace,
+    isGeneralLocationPicked: boolean
 }
 
 export default class AddressComponent extends Question {
@@ -20,7 +21,8 @@ export default class AddressComponent extends Question {
         super(props);
         this.state = {
             code: 0,
-            addressPlace: this.props.addressPlace
+            addressPlace: this.props.addressPlace,
+            isGeneralLocationPicked: this.props.isGeneralLocationPicked
         };
     }
 
@@ -32,7 +34,7 @@ export default class AddressComponent extends Question {
             const subquestions = this.props.question[SConstants.HAS_SUBQUESTION];
 
             for (const subquestion of subquestions) {
-                if (subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT)
+                if (!this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT)
                     continue;
                 if (subquestion[SConstants.HAS_ANSWER] && subquestion[SConstants.HAS_ANSWER][0])
                     subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};

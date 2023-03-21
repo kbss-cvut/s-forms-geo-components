@@ -54,7 +54,8 @@ class _GeoComponent extends Question {
             formData: this.props.formData,
             onChange: this.props.onChange,
             withoutCard: this.props.withoutCard,
-            addressPlace: this.state.addressPlace
+            addressPlace: this.state.addressPlace,
+            isGeneralLocationPicked: this.state.latitude !== null
         }
     }
 
