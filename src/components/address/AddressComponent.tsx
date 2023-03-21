@@ -6,7 +6,6 @@ import {
 import AddressPlace from "../../model/AddressPlace";
 import Utils from "../../utils/Utils";
 import Constants from "../../Constants";
-import AddressPlaceParser from "../../utils/AddressPlaceParser";
 import QuestionEntity from "../../model/QuestionEntity";
 
 export interface AddressProps {
@@ -20,10 +19,29 @@ export default class AddressComponent extends Question {
     constructor(props: AddressProps) {
         super(props);
         this.state = {
-            code: 0,
+            code: null,
             addressPlace: this.props.addressPlace,
             isGeneralLocationPicked: this.props.isGeneralLocationPicked
         };
+    }
+
+    /**
+     * Reset address subquestions recursively to empty string ("").
+     * @param question
+     */
+    _resetValuesToSubQuestionsRecursively(question = this.props.question) {
+        const subquestions = question[SConstants.HAS_SUBQUESTION];
+
+        if (!subquestions || subquestions.lenght === 0)
+            return;
+
+        for (const subquestion of subquestions) {
+            if (!this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT)
+                continue;
+            if (subquestion[SConstants.HAS_ANSWER] && subquestion[SConstants.HAS_ANSWER][0])
+                subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
+            this._resetValuesToSubQuestionsRecursively(subquestion)
+        }
     }
 
     componentDidUpdate() {
@@ -31,18 +49,8 @@ export default class AddressComponent extends Question {
             this.setState({
                 code: null
             })
-            const subquestions = this.props.question[SConstants.HAS_SUBQUESTION];
 
-            for (const subquestion of subquestions) {
-                if (!this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT)
-                    continue;
-                if (subquestion[SConstants.HAS_ANSWER] && subquestion[SConstants.HAS_ANSWER][0])
-                    subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
-            }
-
-            //const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(this.props.question, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
-            /*if (addressTitleQuestion[SConstants.HAS_ANSWER] && addressTitleQuestion[SConstants.HAS_ANSWER][0])
-                addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};*/
+            this._resetValuesToSubQuestionsRecursively();
             return;
         }
 
@@ -52,17 +60,14 @@ export default class AddressComponent extends Question {
                 return;
 
             try {
-                if (!this.state.code) {
+
+                if (!this.state.code || this.state.code !== this.props.addressPlace.addressCode) {
                     this.setState({
                         code: this.props.addressPlace.addressCode
                     });
                 }
 
                 const question = this.props.question;
-
-                const addressTextQuestion = Utils.getSubQuestionByPropertyValue(question, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
-                const addressText = this.props.addressPlace.getAddressText();
-                addressTextQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": addressText};
 
                 const streetQuestion = Utils.getSubQuestionByPropertyValue(question, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.STREET_NAME);
                 const streetQ = new QuestionEntity(streetQuestion);

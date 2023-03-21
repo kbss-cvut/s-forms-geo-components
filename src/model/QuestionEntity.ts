@@ -12,8 +12,9 @@ export default class QuestionEntity {
         // When first question is initialized, the HAS_ANSWER acts like it is not there in the this.originalQuestion object, even-though the question has it surely
         if (!this.originalQuestion[SConstants.HAS_ANSWER] || !this.originalQuestion[SConstants.HAS_ANSWER][0]) {
             this.originalQuestion[SConstants.HAS_ANSWER] = [];
-            this.originalQuestion[SConstants.HAS_ANSWER][0] = [SConstants.HAS_DATA_VALUE];
-            this.originalQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value" : ""};
+            const tempobj = JSON.parse(`{"`+ SConstants.HAS_DATA_VALUE + `":  {"@value" : ""}}`);
+            this.originalQuestion[SConstants.HAS_ANSWER][0] = tempobj;
+            //this.originalQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value" : ""};
         }
 
         this.subQuestions = null;
@@ -24,7 +25,7 @@ export default class QuestionEntity {
 
     setAnswerValue(value: string) {
         if (!value)
-            return;
+            value = "";
         this.originalQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": value};
     }
 }
