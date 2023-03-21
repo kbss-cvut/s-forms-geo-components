@@ -111,7 +111,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
     onAddressPlacePicked = (addressPlace: AddressPlace) => {
         this.setState({
-            pickedAddressPlace: addressPlace
+            pickedAddressPlace: addressPlace,
+            pickedLocationCoords: null
         });
 
         this.mapRef.current?.closePopup();
@@ -179,6 +180,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
     onMarkerLocationPicked = (latitude: number, longitude: number) => {
         this.mapRef.current?.closePopup();
         this.setState({
+            pickedAddressPlace: null,
             pickedLocationCoords: new LatLng(latitude, longitude)
         })
     }
