@@ -103,7 +103,9 @@ class _GeoComponent extends Question {
         this.mapComponentRef.current?.onAddressPlacePicked(addressPlace);
     }
 
-    onAddressPlaceReset = () => {
+    onAddressPlaceReset = (e) => {
+        e.stopPropagation();
+
         this.setState({
             latitude: Constants.DEFAULT_COORDINATES[0],
             longitude: Constants.DEFAULT_COORDINATES[1],

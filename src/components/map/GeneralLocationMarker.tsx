@@ -25,6 +25,7 @@ interface Props {
 }
 
 interface MarkerProps extends Props {
+  pickedLocationCoords: LatLng | null
 }
 
 export default function GeneralLocationMarker(props: MarkerProps) {
@@ -35,6 +36,9 @@ export default function GeneralLocationMarker(props: MarkerProps) {
       setMarkerCoords(new LatLng(e.latlng.lat, e.latlng.lng));
     }
   });
+
+  if (props.pickedLocationCoords && markerCoords?.lat === props.pickedLocationCoords.lat && markerCoords.lng === props.pickedLocationCoords.lng)
+     return null;
 
   return markerCoords === null ? null : (
     <Marker position={markerCoords}>

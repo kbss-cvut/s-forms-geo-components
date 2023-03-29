@@ -1,7 +1,7 @@
 import React from "react";
-import { LayersControl, MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
+import {MapContainer, TileLayer} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
-import L, { LatLng, LatLngExpression, Map as LeafletMap } from "leaflet";
+import L, {LatLng, LatLngExpression, Map as LeafletMap} from "leaflet";
 // @ts-ignore
 import icon from "leaflet/dist/images/marker-icon.png";
 // @ts-ignore
@@ -12,7 +12,7 @@ import LocateIcon from "./LocateIcon";
 import CircleLayer from "./CircleLayer";
 import AddressPlaceMarkersList from "../address/AddressPlaceMarkersList";
 import AddressPlace from "../../model/AddressPlace";
-import { Button } from "react-bootstrap";
+import {Button} from "react-bootstrap";
 import SelectedAddressPlaceMarker from "../address/SelectedAddressPlaceMarker";
 import GeneralLocationMarker from "./GeneralLocationMarker";
 import SelectedGeneralLocationMarker from "./SelectedGeneralLocationMarker";
@@ -67,7 +67,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     componentDidMount() {
-        const mapEl =  document.querySelector("#map");
+        const mapEl = document.querySelector("#map");
         // Clickable section label (Geometrie)
         let sectionParent;
 
@@ -96,7 +96,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
             this.setState({
                 coords: [geolocation.coords.latitude, geolocation.coords.longitude]
             });
-            this.setState({ showUserLocationCircle: true, userLocation: geolocation});
+            this.setState({showUserLocationCircle: true, userLocation: geolocation});
 
             let zoomValue;
             geolocation.coords.accuracy <= 1000 ? zoomValue = 17 : zoomValue = 15;
@@ -172,7 +172,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
             duration: 0.375
         });*/
         document.querySelector(".leaflet-popup")?.remove();
-        this.mapRef.current?.openPopup(addressPlace.toHTMLString(), new LatLng(addressPlace.lat+0.000065, addressPlace.lng), {closeButton:false});
+        this.mapRef.current?.openPopup(addressPlace.toHTMLString(), new LatLng(addressPlace.lat + 0.000065, addressPlace.lng), {closeButton: false});
         document.getElementById(Constants.ADDRESS_PLACE_PICK_BUTTON)?.addEventListener('click', () => this.props.onAddressPlacePicked(addressPlace));
         document.getElementById(Constants.ADDRESS_PLACE_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
     }
@@ -189,51 +189,75 @@ export default class MapComponent extends React.Component<Props, MapState> {
         if (this.state.coords) {
             return (
                 <div>
-                    <MapContainer id={"map"} center={new LatLng(this.state.coords[0], this.state.coords[1])} zoom={7} scrollWheelZoom={true}
+                    <MapContainer id={"map"} center={new LatLng(this.state.coords[0], this.state.coords[1])} zoom={7}
+                                  scrollWheelZoom={true}
                                   whenCreated={mapInstance => {
                                       this.mapRef.current = mapInstance;
                                       this.mapRef.current.addEventListener("zoomend", this.handleMapInteractionEnd);
                                       this.mapRef.current.addEventListener("moveend", this.handleMapInteractionEnd);
-                                  }} >
-                                <TileLayer
-                                    attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-                                    url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
-                                    maxNativeZoom={19}
-                                    maxZoom={21}
-                                />
+                                  }}>
+                        <TileLayer
+                            attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
+                            url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                            maxNativeZoom={19}
+                            maxZoom={21}
+                        />
 
-                            {
-                                //Try to render address place near the center of the map only when zoomed 19 and more
-                                this.state.canRenderClosestAddressPlace && this.mapRef.current &&
-                                <AddressPlaceMarkersList coords={this.mapRef.current.getCenter()} onPick={this.props.onAddressPlacePicked} handleMarkerClick={this.handleAddressPlaceMarkerClick} pickedAddressPlace={this.state.pickedAddressPlace}/>
+                        {
+                            //Try to render address place near the center of the map only when zoomed 19 and more
+                            this.state.canRenderClosestAddressPlace && this.mapRef.current &&
+                            <AddressPlaceMarkersList coords={this.mapRef.current.getCenter()}
+                                                     onPick={this.props.onAddressPlacePicked}
+                                                     handleMarkerClick={this.handleAddressPlaceMarkerClick}
+                                                     pickedAddressPlace={this.state.pickedAddressPlace}/>
 
-                            }
+                        }
 
-                            {
-                                this.state.pickedAddressPlace && !this.state.canRenderClosestAddressPlace &&
-                                <SelectedAddressPlaceMarker addressPlace={this.state.pickedAddressPlace} recenterMap={this.flyToPoint}/>
-                            }
+                        {
+                            this.state.pickedAddressPlace && !this.state.canRenderClosestAddressPlace &&
+                            <SelectedAddressPlaceMarker addressPlace={this.state.pickedAddressPlace}
+                                                        recenterMap={this.flyToPoint}/>
+                        }
 
-                            {
-                                this.state.showLocationMarker && !this.state.pickedLocationCoords &&
-                                <GeneralLocationMarker {...this.props}/>
-                            }
+                        {
+                            this.state.showLocationMarker &&
+                            <GeneralLocationMarker {...this.props}
+                                                   pickedLocationCoords={this.state.pickedLocationCoords}/>
+                        }
 
-                            {
-                              this.state.pickedLocationCoords &&
-                              <SelectedGeneralLocationMarker coords={this.state.pickedLocationCoords}/>
-                            }
+                        {
+                            this.state.pickedLocationCoords &&
+                            <SelectedGeneralLocationMarker coords={this.state.pickedLocationCoords}/>
+                        }
 
-                            {
-                                this.state.showUserLocationCircle && this.state.userLocation && <CircleLayer coords={[this.state.userLocation.coords.latitude, this.state.userLocation.coords.longitude]} radius={this.state.userLocation.coords.accuracy} color={"blue"}/>
-                            }
-                            <Control position='topright'>
-                                <LocateIcon onClick={this.onLocateIconClicked}/>
-                            </Control>
+                        {
+                            this.state.showUserLocationCircle && this.state.userLocation && <CircleLayer
+                                coords={[this.state.userLocation.coords.latitude, this.state.userLocation.coords.longitude]}
+                                radius={this.state.userLocation.coords.accuracy} color={"blue"}/>
+                        }
 
+                        <Control position='topright'>
+                            <LocateIcon onClick={this.onLocateIconClicked}/>
+                        </Control>
+                        
+                        {
+                            this.state.pickedLocationCoords &&
                             <Control position='bottomleft'>
-                                <Button size='sm' className={'btn-custom'} onClick={() => this.props.onAddressPlaceReset()}>Clear form</Button>
+                                <Button size='sm' className={'btn-custom'}
+                                        onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect location</Button>
                             </Control>
+                        }
+
+                        {
+                            this.state.pickedAddressPlace &&
+                            <Control position='bottomleft'>
+                                <Button size='sm' className={'btn-custom'}
+                                        onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect address
+                                    place</Button>
+                            </Control>
+                        }
+
+
                     </MapContainer>
                 </div>
             );
