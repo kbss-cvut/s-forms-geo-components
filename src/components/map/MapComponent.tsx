@@ -1,5 +1,5 @@
 import React from "react";
-import {MapContainer, TileLayer} from "react-leaflet";
+import {MapContainer, Marker, Popup, TileLayer} from "react-leaflet";
 import "leaflet/dist/leaflet.css";
 import L, {LatLng, LatLngExpression, Map as LeafletMap} from "leaflet";
 // @ts-ignore
@@ -14,7 +14,7 @@ import AddressPlaceMarkersList from "../address/AddressPlaceMarkersList";
 import AddressPlace from "../../model/AddressPlace";
 import {Button} from "react-bootstrap";
 import SelectedAddressPlaceMarker from "../address/SelectedAddressPlaceMarker";
-import GeneralLocationMarker from "./GeneralLocationMarker";
+import GeneralLocationMarker, {getMarkerPopupHTML} from "./GeneralLocationMarker";
 import SelectedGeneralLocationMarker from "./SelectedGeneralLocationMarker";
 
 /**
@@ -177,6 +177,13 @@ export default class MapComponent extends React.Component<Props, MapState> {
         document.getElementById(Constants.ADDRESS_PLACE_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
     }
 
+    handleGeneralLocationMarkerClick = (coords: LatLng) => {
+        document.querySelector(".leaflet-popup")?.remove();
+        this.mapRef.current?.openPopup(getMarkerPopupHTML(coords), new LatLng(coords.lat + 0.000065, coords.lng), {closeButton: false});
+        document.getElementById(Constants.LOCATION_PICK_BUTTON)?.addEventListener('click', () => this.props.onMarkerLocationPicked(coords.lat, coords.lng));
+        document.getElementById(Constants.LOCATION_CLOSE_BUTTON)?.addEventListener('click', () => document.querySelector(".leaflet-popup")?.remove());
+    }
+
     onMarkerLocationPicked = (latitude: number, longitude: number) => {
         this.mapRef.current?.closePopup();
         this.setState({
@@ -221,8 +228,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                         {
                             this.state.showLocationMarker &&
-                            <GeneralLocationMarker {...this.props}
-                                                   pickedLocationCoords={this.state.pickedLocationCoords}/>
+                            <GeneralLocationMarker pickedLocationCoords={this.state.pickedLocationCoords} handleMarkerClick={this.handleGeneralLocationMarkerClick}/>
                         }
 
                         {
@@ -239,7 +245,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                         <Control position='topright'>
                             <LocateIcon onClick={this.onLocateIconClicked}/>
                         </Control>
-                        
+
                         {
                             this.state.pickedLocationCoords &&
                             <Control position='bottomleft'>
@@ -256,7 +262,6 @@ export default class MapComponent extends React.Component<Props, MapState> {
                                     place</Button>
                             </Control>
                         }
-
 
                     </MapContainer>
                 </div>

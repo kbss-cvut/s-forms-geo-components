@@ -7,6 +7,7 @@ import { Button } from "react-bootstrap";
 import icon from "leaflet/dist/images/marker-icon.png";
 // @ts-ignore
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
+import Constants from "../../Constants";
 
 /*let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -18,14 +19,9 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
 L.Marker.prototype.options.icon = DefaultIcon;*/
 
-interface Props {
-  onAddressPlacePicked: (addressPlace: AddressPlace) => void,
-  onMarkerLocationPicked: (latitude: number, longitude: number) => void,
-  onAddressPlaceReset: () => void
-}
-
-interface MarkerProps extends Props {
-  pickedLocationCoords: LatLng | null
+interface MarkerProps {
+  pickedLocationCoords: LatLng | null,
+  handleMarkerClick: (coords: LatLng) => void
 }
 
 export default function GeneralLocationMarker(props: MarkerProps) {
@@ -41,16 +37,19 @@ export default function GeneralLocationMarker(props: MarkerProps) {
      return null;
 
   return markerCoords === null ? null : (
-    <Marker position={markerCoords}>
-      <Popup closeButton={false}>
-        {markerCoords.lat.toFixed(7) + " z. š."} <br/>
-        {markerCoords.lng.toFixed(7) + " z. d."} <br/>
-        <Button className={"btn-primary popup-btn"}
-                onClick={(e) => {
-          e.stopPropagation();
-          props.onMarkerLocationPicked(markerCoords.lat, markerCoords.lng)}}>Fill in the form</Button>
-        <Button className={"btn-secondary popup-btn"} onClick={() => map.closePopup()}>Close</Button>
-      </Popup>
+    <Marker position={markerCoords}
+            eventHandlers = {{click: () => props.handleMarkerClick(markerCoords)}}>
     </Marker>
   )
+}
+
+export function getMarkerPopupHTML(markerCoords: LatLng) {
+  let htmlString = "";
+  htmlString += markerCoords.lat.toFixed(7) + " z. š." + "<br/>";
+  htmlString += markerCoords.lng.toFixed(7) + " z. d." + "<br/>";
+
+  htmlString += "<button id=" + Constants.LOCATION_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary popup-btn\">Select location</button> <br/>";
+  htmlString += "<button id=" + Constants.LOCATION_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary popup-btn\">Close</button>";
+
+  return htmlString;
 }

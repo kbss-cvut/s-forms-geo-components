@@ -32,6 +32,9 @@ export default class Constants {
     static ADDRESS_PLACE_PICK_BUTTON = 'address_place_pick_button';
     static ADDRESS_PLACE_CLOSE_BUTTON = 'address_place_cl_button';
 
+    static LOCATION_PICK_BUTTON = 'location_pick_button';
+    static LOCATION_CLOSE_BUTTON = 'location_close_button';
+
     static LAYOUT_TYPE = 'nice';
     static LAYOUT_TYPE_QUESTION = 'type-question';
     static LAYOUT_STICKY = 'sticky';
