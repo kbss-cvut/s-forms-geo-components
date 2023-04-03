@@ -106,7 +106,12 @@ export default class AddressTextComponent extends Question {
         for (const suggestion of this.state.suggestions) {
             children.push(
 
-                <div className={"suggestion"}>
+                <div key={suggestion.admCode} className={"suggestion"} onMouseDown={(e) =>  {
+                    this.props.onAddressPlaceSuggestionClick(suggestion.admCode);
+                    this.setState({
+                        isFocused: false
+                    });
+                }}>
                     {suggestion.addressText}
                 </div>
             )

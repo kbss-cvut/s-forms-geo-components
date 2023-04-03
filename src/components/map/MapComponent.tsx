@@ -116,6 +116,9 @@ export default class MapComponent extends React.Component<Props, MapState> {
         });
 
         this.mapRef.current?.closePopup();
+
+        if(this.mapRef.current?.getZoom() < 15)
+            this.updateMapCenter(addressPlace.lat, addressPlace.lng, 15)
     }
 
     onAddressPlaceReset() {
@@ -228,7 +231,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                         {
                             this.state.showLocationMarker &&
-                            <GeneralLocationMarker pickedLocationCoords={this.state.pickedLocationCoords} handleMarkerClick={this.handleGeneralLocationMarkerClick}/>
+                            <GeneralLocationMarker coords={new LatLng(this.state.coords[0], this.state.coords[1])} pickedLocationCoords={this.state.pickedLocationCoords} pickedAddressPlace={this.state.pickedAddressPlace} handleMarkerClick={this.handleGeneralLocationMarkerClick} onChange={this.updateMapCenter}/>
                         }
 
                         {

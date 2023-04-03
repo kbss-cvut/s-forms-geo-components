@@ -1,16 +1,13 @@
 import L, { LatLng, LatLngExpression } from "leaflet";
-import AddressPlace from "../../model/AddressPlace";
 import React, { useState } from "react";
 import { Marker, Popup, Tooltip, useMap, useMapEvents } from "react-leaflet";
-import icon from 'leaflet/dist/images/marker-icon.png';
-import iconShadow from 'leaflet/dist/images/marker-shadow.png';
 
 const customIcon = new L.Icon({
-  iconUrl: require('../../img/geo-fill-selected.svg'),
-  iconRetinaUrl: require('../../img/geo-fill-selected.svg'),
-  iconSize: [36, 48],
-  iconAnchor: [20, 48],
-  popupAnchor: [0,-40]
+  iconUrl: require('../../img/selected-location-icon.svg'),
+  iconRetinaUrl: require('../../img/selected-location-icon.svg'),
+  iconSize: [38, 50],
+  iconAnchor: [22, 50],
+  popupAnchor: [0,-44]
 });
 
 interface Props {

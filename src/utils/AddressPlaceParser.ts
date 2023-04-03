@@ -7,7 +7,7 @@ export default class AddressPlaceParser {
      * @param isAlreadyParsed true when address xml objects are already parsed; default false
      * @param traceOn true if detailed logging is wanted; default false
      */
-    static parseINSPIREAddressPlace(gml: string, isAlreadyParsed = false, traceOn = false) : AddressPlace | null {
+    static parseINSPIREAddressPlace(gml: string, isAlreadyParsed = false, traceOn = false): AddressPlace | null {
         let text: any = gml;
 
         if (!isAlreadyParsed) {
@@ -82,7 +82,7 @@ export default class AddressPlaceParser {
             }
         });
 
-        let addressNumber : number | null = null;
+        let addressNumber: number | null = null;
         if (!addressNumberComponent && traceOn) {
             console.warn("Address number could not be parsed from INSPIRE AD GML response.");
         }
@@ -109,11 +109,28 @@ export default class AddressPlaceParser {
     static parseAddressesFromBBOXRequest(gml: string): AddressPlace[] {
         const addressPlaces: AddressPlace[] = [];
         const parser = new DOMParser();
-        let text = parser.parseFromString(gml,"text/xml");
+        let text = parser.parseFromString(gml, "text/xml");
 
         const addressPlacesGML = [...text.getElementsByTagName("ad:Address")];
         addressPlacesGML.map(addressPlaceGML => addressPlaces.push(this.parseINSPIREAddressPlace(addressPlaceGML, true)));
 
         return addressPlaces;
+    }
+
+    static parseAddressFromSpringBackend(addressPlace: object): AddressPlace {
+        const addressText = addressPlace.addressText;
+        const code = addressPlace.admCode;
+        const buildingIdentifierPrefix = addressPlace.buildingType;
+        const cityName = addressPlace.cityName;
+        const lat = addressPlace.coordinatesLatLon.x;
+        const lng = addressPlace.coordinatesLatLon.y;
+        const districtName = addressPlace.districtName;
+        const buildingIdentifier = addressPlace.houseNumber;
+        const orientationNumber = addressPlace.orientationalNumber;
+        const orientationNumberExtension = addressPlace.orientationalNumberLetter;
+        const postalCode = addressPlace.postalCode;
+        const streetName = addressPlace.streetName;
+
+        return new AddressPlace(code, lat, lng, streetName, cityName, buildingIdentifier, buildingIdentifierPrefix, orientationNumber, orientationNumberExtension, postalCode);
     }
 }

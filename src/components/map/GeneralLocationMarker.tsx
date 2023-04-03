@@ -1,13 +1,12 @@
-import L, { LatLng, LeafletMouseEventHandlerFn } from "leaflet";
-import AddressPlace from "../../model/AddressPlace";
-import React, { MouseEventHandler, useState } from "react";
-import { Marker, Popup, useMapEvents } from "react-leaflet";
-import { Button } from "react-bootstrap";
+import {LatLng} from "leaflet";
+import React, {useState} from "react";
+import {Marker, useMapEvents} from "react-leaflet";
 // @ts-ignore
 import icon from "leaflet/dist/images/marker-icon.png";
 // @ts-ignore
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import Constants from "../../Constants";
+import AddressPlace from "../../model/AddressPlace";
 
 /*let DefaultIcon = L.icon({
   iconUrl: icon,
@@ -20,21 +19,32 @@ import Constants from "../../Constants";
 L.Marker.prototype.options.icon = DefaultIcon;*/
 
 interface MarkerProps {
+  coords: LatLng
   pickedLocationCoords: LatLng | null,
-  handleMarkerClick: (coords: LatLng) => void
+  pickedAddressPlace: AddressPlace | nul,
+  handleMarkerClick: (coords: LatLng) => void,
+  onChange: (lat: number, lng: number) => void
 }
 
 export default function GeneralLocationMarker(props: MarkerProps) {
-  const [markerCoords, setMarkerCoords] = useState<LatLng | null>(null);
+  const [markerCoords, setMarkerCoords] = useState<LatLng | null>(props.coords);
+
+  if (props.coords !== markerCoords) {
+    setMarkerCoords(props.coords);
+  }
 
   const map = useMapEvents({
     click(e) {
       setMarkerCoords(new LatLng(e.latlng.lat, e.latlng.lng));
+      props.onChange(e.latlng.lat, e.latlng.lng);
     }
   });
 
   if (props.pickedLocationCoords && markerCoords?.lat === props.pickedLocationCoords.lat && markerCoords.lng === props.pickedLocationCoords.lng)
      return null;
+
+  if (props.pickedAddressPlace && props.pickedAddressPlace.lat == markerCoords?.lat && props.pickedAddressPlace.lng == markerCoords?.lng)
+    return null;
 
   return markerCoords === null ? null : (
     <Marker position={markerCoords}

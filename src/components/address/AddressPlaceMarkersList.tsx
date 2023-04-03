@@ -122,7 +122,7 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
 
         const addressPlacesMarkers = this.state.addressPlaces.map((addressPlace, index) => {
             return (
-                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={this.state.addressPlace?.addressCode === addressPlace.addressCode ? iconPickedAddressPlace : iconAddressPlace} eventHandlers={{
+                <Marker key={index} position={new LatLng(addressPlace.lat, addressPlace.lng)} icon={this.state.addressPlace?.addressCode == addressPlace.addressCode ? iconPickedAddressPlace : iconAddressPlace} eventHandlers={{
                         click: () => this.props.handleMarkerClick(addressPlace),
                     }}>
                     {

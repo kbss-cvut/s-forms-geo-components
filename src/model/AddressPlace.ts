@@ -18,15 +18,15 @@ export default class AddressPlace {
     readonly city: string;
     //todo other properties (MOP, MOMC)
 
-    constructor(addressCode: number, lat: number, lng: number, streetName: string | null, city: string, buildingIdentifier: number, buildingIdentifierType: string, addressNumber: number | null, addressNumberExtension: string | null, postalCode: number) {
+    constructor(addressCode: number, lat: number, lng: number, streetName: string | null, city: string, buildingIdentifier: number, buildingIdentifierType: string, orientationNumber: number | null, orientationNumberExtension: string | null, postalCode: number) {
         this.addressCode = addressCode;
         this.lat = lat;
         this.lng = lng;
-        this.streetName = streetName;
+        streetName && streetName.length != 0 ? this.streetName = streetName : null;
         this.buildingIdentifier = buildingIdentifier;
         this.buildingIdentifierType = buildingIdentifierType.trim();
-        this.orientationNumber = addressNumber;
-        this.orientationNumberExtension = addressNumberExtension?.trim();
+        orientationNumber ? this.orientationNumber = orientationNumber : null;
+        this.orientationNumberExtension = orientationNumberExtension?.trim();
         this.postalCode = postalCode;
         this.city = city.trim();
     }

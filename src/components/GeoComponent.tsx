@@ -8,6 +8,8 @@ import CoordinateComponent from "./coordinates/CoordinateComponent";
 import AddressPlace from "../model/AddressPlace";
 import AddressComponent from "./address/AddressComponent";
 import AddressTextComponent from "./address/AddressTextComponent";
+import spring_backend_api from "../api/spring_backend_api";
+import AddressPlaceParser from "../utils/AddressPlaceParser";
 
 interface Props {
     index: number,
@@ -27,8 +29,8 @@ class _GeoComponent extends Question {
         console.log(this.props.question);
 
         this.state = {
-            latitude: Constants.DEFAULT_COORDINATES[0],
-            longitude: Constants.DEFAULT_COORDINATES[1],
+            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(1),
+            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(1),
             addressPlace: null
         };
 
@@ -67,8 +69,16 @@ class _GeoComponent extends Question {
             formData: this.props.formData,
             onChange: this.props.onChange,
             withoutCard: this.props.withoutCard,
-            addressPlace: this.state.addressPlace
+            addressPlace: this.state.addressPlace,
         }
+    }
+
+    onAddressPlaceSuggestionClick = (addressCode: number) => {
+        spring_backend_api.getAddressPlaceByCode(addressCode)
+            .then(response => {
+                this.onAddressPlacePicked(AddressPlaceParser.parseAddressFromSpringBackend(response.data));
+            })
+            .catch(error => console.error(error));
     }
 
     onMarkerLocationPicked = (latitude: number, longitude: number) => {
@@ -107,8 +117,8 @@ class _GeoComponent extends Question {
         e.stopPropagation();
 
         this.setState({
-            latitude: Constants.DEFAULT_COORDINATES[0],
-            longitude: Constants.DEFAULT_COORDINATES[1],
+            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(1),
+            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(1),
             addressPlace: null
         });
 
@@ -159,7 +169,7 @@ class _GeoComponent extends Question {
                     </div>
                         {this.isAddressComponentQuestion() &&
                             <div className={'address-text'}>
-                                <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))}/>
+                                <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))} onAddressPlaceSuggestionClick={this.onAddressPlaceSuggestionClick}/>
                             </div>
                         }
                     </>
