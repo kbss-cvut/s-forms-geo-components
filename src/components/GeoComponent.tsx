@@ -29,8 +29,8 @@ class _GeoComponent extends Question {
         console.log(this.props.question);
 
         this.state = {
-            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(1),
-            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(1),
+            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(7),
+            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(7),
             addressPlace: null
         };
 
@@ -83,8 +83,8 @@ class _GeoComponent extends Question {
 
     onMarkerLocationPicked = (latitude: number, longitude: number) => {
         this.setState({
-            latitude: latitude,
-            longitude: longitude,
+            latitude: latitude.toFixed(7),
+            longitude: longitude.toFixed(7),
             addressPlace: null,
         });
         this.mapComponentRef.current?.onMarkerLocationPicked(latitude, longitude);
@@ -106,8 +106,8 @@ class _GeoComponent extends Question {
 
     onAddressPlacePicked = (addressPlace : AddressPlace) => {
         this.setState({
-            latitude: addressPlace.lat,
-            longitude: addressPlace.lng,
+            latitude: addressPlace.lat.toFixed(7),
+            longitude: addressPlace.lng.toFixed(7),
             addressPlace: addressPlace
         });
         this.mapComponentRef.current?.onAddressPlacePicked(addressPlace);
@@ -117,8 +117,8 @@ class _GeoComponent extends Question {
         e.stopPropagation();
 
         this.setState({
-            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(1),
-            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(1),
+            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(7),
+            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(7),
             addressPlace: null
         });
 

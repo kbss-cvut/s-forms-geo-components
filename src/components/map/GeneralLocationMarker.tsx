@@ -8,20 +8,10 @@ import iconShadow from "leaflet/dist/images/marker-shadow.png";
 import Constants from "../../Constants";
 import AddressPlace from "../../model/AddressPlace";
 
-/*let DefaultIcon = L.icon({
-  iconUrl: icon,
-  shadowUrl: iconShadow,
-  iconSize: [32, 44],
-  iconAnchor: [16, 44],
-  popupAnchor: [0, -45]
-});
-
-L.Marker.prototype.options.icon = DefaultIcon;*/
-
 interface MarkerProps {
   coords: LatLng
   pickedLocationCoords: LatLng | null,
-  pickedAddressPlace: AddressPlace | nul,
+  pickedAddressPlace: AddressPlace | null,
   handleMarkerClick: (coords: LatLng) => void,
   onChange: (lat: number, lng: number) => void
 }
