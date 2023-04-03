@@ -116,9 +116,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
         });
 
         this.mapRef.current?.closePopup();
-
-        if(this.mapRef.current?.getZoom() < 15)
-            this.updateMapCenter(addressPlace.lat, addressPlace.lng, 15)
+        this.updateMapCenter(addressPlace.lat, addressPlace.lng, 17)
     }
 
     onAddressPlaceReset() {

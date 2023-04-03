@@ -125,7 +125,7 @@ class _GeoComponent extends Question {
         const addressQuestion = this.locationContainsAddress();
         if (addressQuestion) {
             const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(addressQuestion, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
-            addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
+            addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
         }
 
         this.mapComponentRef.current?.onAddressPlaceReset();

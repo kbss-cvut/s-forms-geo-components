@@ -39,7 +39,7 @@ export default class AddressComponent extends Question {
             if (!this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT)
                 continue;
             if (subquestion[SConstants.HAS_ANSWER] && subquestion[SConstants.HAS_ANSWER][0])
-                subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": ""};
+                subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
             this._resetValuesToSubQuestionsRecursively(subquestion)
         }
     }
