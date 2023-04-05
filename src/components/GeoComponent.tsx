@@ -29,8 +29,8 @@ class _GeoComponent extends Question {
         console.log(this.props.question);
 
         this.state = {
-            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(7),
-            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(7),
+            latitude: null,
+            longitude: null,
             addressPlace: null
         };
 
@@ -117,8 +117,8 @@ class _GeoComponent extends Question {
         e.stopPropagation();
 
         this.setState({
-            latitude: Constants.DEFAULT_COORDINATES[0].toFixed(7),
-            longitude: Constants.DEFAULT_COORDINATES[1].toFixed(7),
+            latitude: null,
+            longitude: null,
             addressPlace: null
         });
 
@@ -153,7 +153,7 @@ class _GeoComponent extends Question {
                     <AddressComponent {...this.getAddressQuestionProps(this.props.question)} />
                 }
 
-                <MapComponent onMarkerLocationPicked={this.onMarkerLocationPicked} onAddressPlacePicked={this.onAddressPlacePicked} onAddressPlaceReset={this.onAddressPlaceReset} ref={this.mapComponentRef}/>
+                <MapComponent onMarkerLocationPicked={this.onMarkerLocationPicked} onAddressPlacePicked={this.onAddressPlacePicked} onAddressPlaceReset={this.onAddressPlaceReset} ref={this.mapComponentRef} userInputCoords={[this.state.latitude, this.state.longitude]}/>
 
                 {
                     this.isAddressComponentQuestion() && this.locationContainsCoordinates() &&

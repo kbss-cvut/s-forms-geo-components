@@ -38,12 +38,15 @@ export default class CoordinateComponent extends Question {
     handleAnswerChange = (answerIndex: number, change: any) => {
         if (change[SConstants.HAS_DATA_VALUE]) {
             const inputValue: string = change[SConstants.HAS_DATA_VALUE]["@value"];
+            this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
+            this.props.onInput(inputValue);
 
-            const regExp = new RegExp("^\\d{1,3}\\.\\d+?$");
+
+            /*const regExp = new RegExp("^\\d{1,3}\\.\\d+?$");
             if (regExp.test(inputValue)) {
                 this.props.onInput(inputValue);
                 this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
-            }
+            }*/
         }
     };
 

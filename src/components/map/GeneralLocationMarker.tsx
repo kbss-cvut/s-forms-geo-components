@@ -9,7 +9,7 @@ import Constants from "../../Constants";
 import AddressPlace from "../../model/AddressPlace";
 
 interface MarkerProps {
-  coords: LatLng
+  coords: number[] | null
   pickedLocationCoords: LatLng | null,
   pickedAddressPlace: AddressPlace | null,
   handleMarkerClick: (coords: LatLng) => void,
@@ -17,11 +17,7 @@ interface MarkerProps {
 }
 
 export default function GeneralLocationMarker(props: MarkerProps) {
-  const [markerCoords, setMarkerCoords] = useState<LatLng | null>(props.coords);
-
-  if (props.coords !== markerCoords) {
-    setMarkerCoords(props.coords);
-  }
+  const [markerCoords, setMarkerCoords] = useState<LatLng | null>(null);
 
   const map = useMapEvents({
     click(e) {
