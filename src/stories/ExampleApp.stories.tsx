@@ -3,6 +3,7 @@ import SForms, { Constants, IntlContextProvider } from "@kbss-cvut/s-forms";
 import exampleForm from "./assets/example_form.json";
 import exampleFormTC from "./assets/example_turisticky_cil.json";
 import touristForm from "./assets/example_tourist_destination_form_with_location.json";
+import touristFormWithData from "./assets/example_tourist_destination_form_with_location_with_data.json";
 import possibleValues from "./assets/possibleValues.json";
 import { ComponentMeta, ComponentStory } from "@storybook/react";
 import GeoComponents from "../GeoComponents";
@@ -97,4 +98,10 @@ export const TouristDestinationWithGeolocation = Template.bind({});
 TouristDestinationWithGeolocation.args = {
   options: options,
   form: touristForm
+};
+
+export const TouristDestinationWithGeolocationWithData = Template.bind({});
+TouristDestinationWithGeolocationWithData.args = {
+  options: options,
+  form: touristFormWithData
 };
