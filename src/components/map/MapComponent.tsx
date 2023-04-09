@@ -107,7 +107,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     relocateBasedOnUserInput = (latitude: number, longitude: number) => {
-        this.updateMapCenter(latitude, longitude);
+        this.updateMapCenterWhenCoordsInput(latitude, longitude);
     }
 
     onAddressPlacePicked = (addressPlace: AddressPlace) => {
@@ -142,7 +142,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
         } else return true;
     }
 
-    updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
+    updateMapCenterWhenCoordsInput = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
         try {
             this.onlyDigits(latitude);
             this.onlyDigits(longitude);
@@ -158,6 +158,14 @@ export default class MapComponent extends React.Component<Props, MapState> {
                 coords: []
             });
         }
+    }
+
+    updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
+        const newLocation = new LatLng(latitude, longitude);
+        this.mapRef.current?.setView(newLocation, zoom);
+        this.setState({
+            coords: [latitude, longitude]
+        });
     }
 
     handleMapInteractionEnd = () => {
@@ -257,6 +265,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                     }
 
                     {
+                        this.state.pickedLocationCoords &&
                         <SelectedGeneralLocationMarker coords={this.props.userInputCoords} onRender={this.onMarkerLocationPicked}/>
                     }
 

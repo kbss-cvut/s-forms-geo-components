@@ -26,7 +26,7 @@ export default function GeneralLocationMarker(props: MarkerProps) {
     }
   });
 
-  if (props.pickedLocationCoords && markerCoords?.lat === props.pickedLocationCoords.lat && markerCoords.lng === props.pickedLocationCoords.lng)
+  if (props.pickedLocationCoords && markerCoords?.lat.toFixed(7) === props.pickedLocationCoords.lat.toFixed(7) && markerCoords.lng.toFixed(7) === props.pickedLocationCoords.lng.toFixed(7))
      return null;
 
   if (props.pickedAddressPlace && props.pickedAddressPlace.lat == markerCoords?.lat && props.pickedAddressPlace.lng == markerCoords?.lng)
