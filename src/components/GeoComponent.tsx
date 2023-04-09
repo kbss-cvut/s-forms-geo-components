@@ -90,14 +90,14 @@ class _GeoComponent extends Question {
         this.mapComponentRef.current?.onMarkerLocationPicked(latitude, longitude);
     }
 
-    onUserLongitudeInput = (longitudeInput: string) => {
+    onUserLongitudeInput = (longitudeInput: number) => {
         this.setState({
             longitude: longitudeInput
         });
         this.mapComponentRef.current?.relocateBasedOnUserInput(this.state.latitude, longitudeInput);
     }
 
-    onUserLatitudeInput = (latitudeInput: string) => {
+    onUserLatitudeInput = (latitudeInput: number) => {
         this.setState({
             latitude: latitudeInput
         });

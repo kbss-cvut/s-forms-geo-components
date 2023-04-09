@@ -106,8 +106,8 @@ export default class MapComponent extends React.Component<Props, MapState> {
         }, error => console.warn(error.message));
     }
 
-    relocateBasedOnUserInput = (latitude: string, longitude: string) => {
-        this.updateMapCenter(parseFloat(latitude), parseFloat(longitude));
+    relocateBasedOnUserInput = (latitude: number, longitude: number) => {
+        this.updateMapCenter(latitude, longitude);
     }
 
     onAddressPlacePicked = (addressPlace: AddressPlace) => {
@@ -135,14 +135,29 @@ export default class MapComponent extends React.Component<Props, MapState> {
         //this.updateMapCenter(defaultPosition[0], defaultPosition[1]);
     }
 
-    updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
-        this.setState({
-            coords: [latitude, longitude]
-        });
-        try {
-            this.mapRef.current?.setView(new LatLng(latitude, longitude), zoom);
-        } catch (e) {}
+    onlyDigits(num: number) {
+        console.log(num);
+        if (!num.toString().match("^[+-]?([0-9]*[.])?[0-9]+$")) {
+            throw Error("Not valid number.");
+        } else return true;
+    }
 
+    updateMapCenter = (latitude: number, longitude: number, zoom: number = this.mapRef.current?.getZoom()) => {
+        try {
+            this.onlyDigits(latitude);
+            this.onlyDigits(longitude);
+            const newLocation = new LatLng(latitude, longitude);
+            this.mapRef.current?.setView(newLocation, zoom);
+            this.setState({
+                coords: [latitude, longitude],
+                pickedLocationCoords: newLocation
+            });
+        } catch (e) {
+            this.setState({
+                pickedLocationCoords: null,
+                coords: []
+            });
+        }
     }
 
     handleMapInteractionEnd = () => {

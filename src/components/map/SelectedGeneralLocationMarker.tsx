@@ -31,10 +31,9 @@ export default function SelectedGeneralLocationMarker(props: Props) {
             props.onRender(selectedPositionCoords?.lat, selectedPositionCoords?.lng);
         }
     } catch (e) {
-        selectedPositionCoords = lastCoords;
         console.warn("Invalid coordinates: " + props.coords[0] + " " + props.coords[1] + ". Using last valid coordinates: " + lastCoords?.lat + " " + lastCoords?.lng);
+        return null;
     }
-
 
     return (
         <Marker position={selectedPositionCoords} icon={customIcon}
