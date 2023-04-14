@@ -219,3 +219,9 @@
     background-color: #4659ff !important;
     color: white !important;
 }
+
+/*TODO Has no effect so far; used for centering buttons in popup */
+.address-place-popup-footer {
+    display: flex;
+    justify-content: center;
+}

@@ -8,6 +8,8 @@ import AddressPlace from "../../model/AddressPlace";
 import spring_backend_api from "../../api/spring_backend_api";
 import classNames from "classnames";
 import Utils from "../../utils/Utils";
+import Modal from 'react-bootstrap/Modal';
+import { Button } from "react-bootstrap";
 
 export interface AddressTextProps {
     question: object,
@@ -21,7 +23,9 @@ export default class AddressTextComponent extends Question {
         this.state = {
             addressPlace: null,
             suggestions: [],
-            isFocused: false
+            isFocused: false,
+            showPopup: false,
+            tempChange: null,
         }
     }
 
@@ -35,10 +39,15 @@ export default class AddressTextComponent extends Question {
         this._updateTextValue();
         return null;
     }
-
+    
     handleAnswerChange = (answerIndex: number, change: any) => {
         if (change[SConstants.HAS_DATA_VALUE]) {
             const inputValue: string = change[SConstants.HAS_DATA_VALUE]["@value"];
+
+            if (this.state.addressPlace && inputValue !== this.state.addressPlace.getAddressText()) {
+                this.setState({showPopup: true, tempChange: {answerIndex, change}});
+                return;
+            }
 
             if (inputValue.length <= 3) {
                 this.setState({
@@ -109,7 +118,8 @@ export default class AddressTextComponent extends Question {
                 <div key={suggestion.admCode} className={"suggestion"} onMouseDown={(e) =>  {
                     this.props.onAddressPlaceSuggestionClick(suggestion.admCode);
                     this.setState({
-                        isFocused: false
+                        isFocused: false,
+                        //handleShow: true
                     });
                 }}>
                     {suggestion.addressText}
@@ -129,13 +139,8 @@ export default class AddressTextComponent extends Question {
             children = [],
             answers = this._getAnswers();
         let cls;
-        let isTextarea;
 
         for (let i = 0, len = answers.length; i < len; i++) {
-            isTextarea =
-                FormUtils.isTextarea(question, FormUtils.resolveValue(answers[i])) ||
-                FormUtils.isSparqlInput(question) ||
-                FormUtils.isTurtleInput(question);
             cls = classNames(
                 'answer',
                 Question._getQuestionCategoryClass(question),
@@ -158,7 +163,39 @@ export default class AddressTextComponent extends Question {
                 </div>
             );
         }
+
+        children.push(this._renderModifyAddressTextPopup());
+
         return children;
+    }
+
+    _handleKeepAddressPlaceButtonClick = () => {
+        this.setState({showPopup:false});
+    }
+
+    _handleModifyAddressPlaceButtonClick = (e) => {
+        this._handleChange(SConstants.HAS_ANSWER, this.state.tempChange.answerIndex, this.state.tempChange.change);
+        this.setState({showPopup: false, tempChange: null})
+        this.props.onAddressTextModified(e);
+    }
+
+    _renderModifyAddressTextPopup() {
+        return (
+          <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})}>
+              <Modal.Header>
+                  <Modal.Title>Modifying selected address place</Modal.Title>
+              </Modal.Header>
+              <Modal.Body>With modifying current address you will unselect current address place. Are you sure?</Modal.Body>
+              <Modal.Footer className={"address-place-popup-footer"}>
+                  <Button variant="warning" onClick={(e) => this._handleModifyAddressPlaceButtonClick(e)}>
+                      Modify and unselect
+                  </Button>
+                  <Button variant="secondary" onClick={this._handleKeepAddressPlaceButtonClick}>
+                      Keep current address place
+                  </Button>
+              </Modal.Footer>
+          </Modal>
+        );
     }
 }
 

@@ -125,7 +125,7 @@ class _GeoComponent extends Question {
         const addressQuestion = this.locationContainsAddress();
         if (addressQuestion) {
             const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(addressQuestion, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
-            addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
+            //addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
         }
 
         this.mapComponentRef.current?.onAddressPlaceReset();
@@ -169,7 +169,10 @@ class _GeoComponent extends Question {
                     </div>
                         {this.isAddressComponentQuestion() &&
                             <div className={'address-text'}>
-                                <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))} onAddressPlaceSuggestionClick={this.onAddressPlaceSuggestionClick}/>
+                                <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))}
+                                                      onAddressPlaceSuggestionClick={this.onAddressPlaceSuggestionClick}
+                                                      onAddressTextModified={this.onAddressPlaceReset}
+                                />
                             </div>
                         }
                     </>
