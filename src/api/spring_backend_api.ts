@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const spring_backend_api = axios.create({
-    timeout: 1000
+    timeout: 1500
 });
 
 export default {

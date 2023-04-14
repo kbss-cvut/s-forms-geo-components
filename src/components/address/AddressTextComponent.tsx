@@ -59,22 +59,26 @@ export default class AddressTextComponent extends Question {
 
             this._handleChange(SConstants.HAS_ANSWER, answerIndex, change);
 
-            spring_backend_api.getSuggestions(inputValue)
-                .then(response => {
-                    const addressPlaces = response.data;
-
-                    this.setState({
-                        suggestions: addressPlaces
-                    })
-
-                })
-                .catch(error => {
-                    console.error(error);
-                    this.setState({
-                        suggestions: Utils.getAddressPlacesTestingSample()
-                    })
-                })
+            this._getSuggestions(inputValue);
         }
+    }
+
+    _getSuggestions = (input: string) => {
+        spring_backend_api.getSuggestions(input)
+          .then(response => {
+              const addressPlaces = response.data;
+
+              this.setState({
+                  suggestions: addressPlaces
+              })
+
+          })
+          .catch(error => {
+              console.error(error);
+              this.setState({
+                  suggestions: Utils.getAddressPlacesTestingSample()
+              })
+          })
     }
 
     _updateTextValue() {
@@ -175,6 +179,7 @@ export default class AddressTextComponent extends Question {
 
     _handleModifyAddressPlaceButtonClick = (e) => {
         this._handleChange(SConstants.HAS_ANSWER, this.state.tempChange.answerIndex, this.state.tempChange.change);
+        this._getSuggestions(this.state.tempChange.change[SConstants.HAS_DATA_VALUE]['@value']);
         this.setState({showPopup: false, tempChange: null})
         this.props.onAddressTextModified(e);
     }
