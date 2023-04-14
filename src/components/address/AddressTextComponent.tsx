@@ -181,7 +181,7 @@ export default class AddressTextComponent extends Question {
 
     _renderModifyAddressTextPopup() {
         return (
-          <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})}>
+          <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})} centered>
               <Modal.Header>
                   <Modal.Title>Modifying selected address place</Modal.Title>
               </Modal.Header>
