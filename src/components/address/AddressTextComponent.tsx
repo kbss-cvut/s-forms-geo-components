@@ -46,7 +46,7 @@ export default class AddressTextComponent extends Question {
         if (change[SConstants.HAS_DATA_VALUE]) {
             const inputValue: string = change[SConstants.HAS_DATA_VALUE]["@value"];
 
-            if (this.state.addressPlace && inputValue !== this.state.addressPlace.getAddressText()) {
+            if (this.state.addressPlace && inputValue !== this.state.addressPlace.getAddressText() && inputValue !== this.props.addressPlace.getAddressText()) {
                 this.setState({showPopup: true, tempChange: {answerIndex, change}});
                 return;
             }
@@ -86,7 +86,8 @@ export default class AddressTextComponent extends Question {
     _updateTextValue() {
         if (this.state.addressPlace && !this.props.addressPlace) {
             this.setState({
-                addressPlace: null
+                addressPlace: null,
+                suggestions: null
             });
             return;
         }
@@ -95,7 +96,9 @@ export default class AddressTextComponent extends Question {
             this.setState({
                 addressPlace: this.props.addressPlace
             });
+
             this.props.question[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = { '@value': this.props.addressPlace.getAddressText()};
+            this.handleAnswerChange(0, this.props.question[SConstants.HAS_ANSWER][0]);
         }
     }
 
