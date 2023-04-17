@@ -13,7 +13,9 @@ import { Button } from "react-bootstrap";
 
 export interface AddressTextProps {
     question: object,
-    addressPlace: AddressPlace | null
+    addressPlace: AddressPlace | null,
+    onAddressPlaceSuggestionClick: (admCode: number) => void,
+    onAddressTextModified: (event: any) => void
 }
 
 export default class AddressTextComponent extends Question {
@@ -114,17 +116,13 @@ export default class AddressTextComponent extends Question {
         if (!this.state.suggestions || this.state.suggestions.length === 0 || !this.state.isFocused)
             return null;
 
-        let children = [];
+        const children = [];
 
         for (const suggestion of this.state.suggestions) {
             children.push(
-
                 <div key={suggestion.admCode} className={"suggestion"} onMouseDown={(e) =>  {
                     this.props.onAddressPlaceSuggestionClick(suggestion.admCode);
-                    this.setState({
-                        isFocused: false,
-                        //handleShow: true
-                    });
+                    this.setState({isFocused: false});
                 }}>
                     {suggestion.addressText}
                 </div>

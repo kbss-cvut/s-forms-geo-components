@@ -35,6 +35,8 @@ interface State {
 }
 
 export default class AddressPlaceMarkersList extends React.Component<Props, State> {
+    private axiosAbortController = new AbortController();
+
     constructor(props: Props) {
         super(props);
 
@@ -69,7 +71,7 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
      */
     getAddressesByBBOX() {
         if (this.state.inputCoords?.lng !== this.props.coords.lng || this.state.inputCoords?.lat !== this.props.coords.lat) {
-            inspire_address_api.getAddressesByBBOX(this.props.coords.lng + 0.001612, this.props.coords.lat + 0.000416, this.props.coords.lng - 0.00168, this.props.coords.lat - 0.000447)
+            inspire_address_api.getAddressesByBBOX(this.props.coords.lng + 0.001612, this.props.coords.lat + 0.000416, this.props.coords.lng - 0.00168, this.props.coords.lat - 0.000447, {signal: this.axiosAbortController.signal})
                 .then(response => {
                     const addressPlaces1 = AddressPlaceParser.parseAddressesFromBBOXRequest(response.data);
 
@@ -91,7 +93,6 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
     }
 
     componentDidUpdate() {
-
         if (!this.props.pickedAddressPlace && this.state.addressPlace) {
             this.setState({
                 addressPlace: null
@@ -114,6 +115,10 @@ export default class AddressPlaceMarkersList extends React.Component<Props, Stat
         if (this.props.coords.lng != this.state.inputCoords?.lng || this.props.coords.lat != this.state.inputCoords?.lat) {
             this.getAddressesByBBOX()
         }
+    }
+
+    componentWillUnmount() {
+        this.axiosAbortController.abort();
     }
 
     render() {

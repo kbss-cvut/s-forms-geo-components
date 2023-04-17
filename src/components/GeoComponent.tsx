@@ -44,7 +44,8 @@ class _GeoComponent extends Question {
             collapsible: this.props.collapsible,
             formData: this.props.formData,
             onChange: this.props.onChange,
-            withoutCard: this.props.withoutCard
+            withoutCard: this.props.withoutCard,
+            addressPlace: this.state.addressPlace
         }
     }
 
@@ -85,7 +86,7 @@ class _GeoComponent extends Question {
         this.setState({
             latitude: latitude.toFixed(7),
             longitude: longitude.toFixed(7),
-            addressPlace: null,
+            addressPlace: null
         });
         this.mapComponentRef.current?.onMarkerLocationPicked(latitude, longitude);
     }
@@ -113,6 +114,28 @@ class _GeoComponent extends Question {
         this.mapComponentRef.current?.onAddressPlacePicked(addressPlace);
     }
 
+    onAddressPlaceTextModified = (e) => {
+        e.stopPropagation();
+
+        this.setState({
+            latitude: null,
+            longitude: null,
+            addressPlace: null
+        });
+
+        this.mapComponentRef.current?.onAddressPlaceReset();
+    }
+
+    onCoordinateValueModifiedWhenAddressPlaceIsSelected = (e) => {
+        e.stopPropagation();
+
+        this.setState({
+            addressPlace: null
+        });
+
+        this.mapComponentRef.current?.onAddressPlaceReset();
+    }
+
     onAddressPlaceReset = (e) => {
         e.stopPropagation();
 
@@ -125,7 +148,7 @@ class _GeoComponent extends Question {
         const addressQuestion = this.locationContainsAddress();
         if (addressQuestion) {
             const addressTitleQuestion = Utils.getSubQuestionByPropertyValue(addressQuestion, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.ADDRESS_TEXT);
-            //addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
+            addressTitleQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
         }
 
         this.mapComponentRef.current?.onAddressPlaceReset();
@@ -161,17 +184,17 @@ class _GeoComponent extends Question {
                     <div className={'coordinate'}>
                         <CoordinateComponent
                             coordValue={this.state.longitude}
-                            onInput={this.onUserLongitudeInput} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LONGITUDE_IRI))}/>
+                            onInput={this.onUserLongitudeInput} onCoordinateInputModified={this.onCoordinateValueModifiedWhenAddressPlaceIsSelected} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LONGITUDE_IRI))}/>
                     </div>
                     <div className={'coordinate'}>
                         <CoordinateComponent coordValue={this.state.latitude}
-                                             onInput={this.onUserLatitudeInput} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LATITUDE_IRI))}/>
+                                             onInput={this.onUserLatitudeInput} onCoordinateInputModified={this.onCoordinateValueModifiedWhenAddressPlaceIsSelected} {...this.getCoordinateProps(this.locationQuestionsCache.find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.LATITUDE_IRI))}/>
                     </div>
                         {this.isAddressComponentQuestion() &&
                             <div className={'address-text'}>
                                 <AddressTextComponent {...this.getAddressTextQuestionProps(this.props.question[SConstants.HAS_SUBQUESTION].find(q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT))}
                                                       onAddressPlaceSuggestionClick={this.onAddressPlaceSuggestionClick}
-                                                      onAddressTextModified={this.onAddressPlaceReset}
+                                                      onAddressTextModified={this.onAddressPlaceTextModified}
                                 />
                             </div>
                         }

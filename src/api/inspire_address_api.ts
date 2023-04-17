@@ -1,4 +1,4 @@
-import axios from "axios";
+import axios, {AxiosRequestConfig} from "axios";
 
 const inspire_ad_api = axios.create({
     timeout: 1500
@@ -14,8 +14,8 @@ export default {
         return axios.create().get(getFeatureByPointRequest(lat,lng));
     },
 
-    getAddressesByBBOX: (long1: number, lat1: number, long2: number, lat2: number) => {
-        return axios.create().get(getAddressesByBBOX(long1, lat1, long2, lat2));
+    getAddressesByBBOX: (long1: number, lat1: number, long2: number, lat2: number, axiosOptions: AxiosRequestConfig<any> | undefined = undefined) => {
+        return axios.create().get(getAddressesByBBOX(long1, lat1, long2, lat2), axiosOptions);
     }
 }
 

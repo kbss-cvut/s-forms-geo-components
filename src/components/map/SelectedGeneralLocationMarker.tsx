@@ -42,10 +42,6 @@ export default function SelectedGeneralLocationMarker(props: Props) {
                 {selectedPositionCoords?.lat.toFixed(7) + " z. š."} <br/>
                 {selectedPositionCoords?.lng.toFixed(7) + " z. d."} <br/>
             </Tooltip>
-            <Popup closeButton={false} position={new LatLng(selectedPositionCoords?.lat + 0.00565, selectedPositionCoords?.lng)}>
-                {selectedPositionCoords?.lat.toFixed(7) + " z. š."} <br/>
-                {selectedPositionCoords?.lng.toFixed(7) + " z. d."} <br/>
-            </Popup>
         </Marker>
     )
 }

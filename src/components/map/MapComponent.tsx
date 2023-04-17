@@ -136,7 +136,6 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     onlyDigits(num: number) {
-        console.log(num);
         if (!num.toString().match("^[+-]?([0-9]*[.])?[0-9]+$")) {
             throw Error("Not valid number.");
         } else return true;
