@@ -1,6 +1,46 @@
 version: "3"
 services:
   storybook:
+    container_name: s-forms-geo-components
     ports:
       - "6006:6006"
     build: .
+    networks:
+      - solr
+  solr:
+    container_name: ruian-solr
+    image: "ghcr.io/vojtechlunak/ruian-search/ruian-solr:latest"
+    ports:
+      - 8983:8983
+    volumes:
+      - data:/var/solr
+    networks:
+      - solr
+    healthcheck:
+      test: wget --spider -q http://localhost:8983 || exit 1
+      interval: 20s
+      timeout: 10s
+  spring-boot:
+    container_name: backend
+    hostname: spring-boot
+    image: "ghcr.io/vojtechlunak/ruian-search/ruian-search:latest"
+    environment:
+      RUIAN_SOLR_URL: http://solr:8983/solr
+    ports:
+      - 8080:8080
+    networks:
+      - solr
+      - proxy
+    depends_on:
+      - solr
+    healthcheck:
+      test: wget --spider -q http://localhost:8080 || exit 1
+      interval: 20s
+      timeout: 10s
+volumes:
+  data:
+networks:
+  solr:
+    driver: bridge
+  proxy:
+    driver: bridge
