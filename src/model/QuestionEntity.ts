@@ -1,4 +1,5 @@
 import { Constants as SConstants } from '@kbss-cvut/s-forms';
+import Constants from "../Constants";
 
 export default class QuestionEntity {
     readonly id: string;
@@ -27,5 +28,16 @@ export default class QuestionEntity {
         if (!value)
             value = "";
         this.originalQuestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": value};
+
+        //Temp fix for allowing address text input
+        if (this.originalQuestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT)
+            return;
+
+        //Disable form inputs for further editing
+        if (!this.originalQuestion[SConstants.LAYOUT_CLASS]) {
+            this.originalQuestion[SConstants.LAYOUT_CLASS] = SConstants.LAYOUT.DISABLED;
+        } else if (!this.originalQuestion[SConstants.LAYOUT_CLASS][SConstants.LAYOUT.DISABLED]) {
+            this.originalQuestion[SConstants.LAYOUT_CLASS].push(SConstants.LAYOUT.DISABLED);
+        }
     }
 }

@@ -37,10 +37,10 @@ export default class GeoComponents {
         component: GeoComponent,
         mapRule: (q, form) => this.isGeoComponentQuestion(q, form)
       },
-      {
+      /*{
         component: AddressTextComponent,
         mapRule: q => q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET] && q[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]['@id'] === Constants.ADDRESS_TEXT
-      },
+      },*/
       /*{
         component: GeoComponent,
         mapRule: q => Utils.hasPropertyWithValue(q, Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET, Constants.LATITUDE_IRI)
