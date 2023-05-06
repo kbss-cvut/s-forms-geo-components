@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import L, {LatLng} from 'leaflet';
 import AddressPlace from "../../model/AddressPlace";

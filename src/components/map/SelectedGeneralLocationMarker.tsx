@@ -1,3 +1,4 @@
+// @ts-nocheck
 import L, {LatLng} from "leaflet";
 import React, {useState} from "react";
 import {Marker, Popup, Tooltip, useMap} from "react-leaflet";

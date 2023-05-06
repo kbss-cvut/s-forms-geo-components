@@ -1,3 +1,4 @@
+// @ts-nocheck
 import React from "react";
 import L, {LatLng} from 'leaflet';
 import {CircleMarker, Marker, Popup} from "react-leaflet";

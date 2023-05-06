@@ -12,25 +12,19 @@
     "node": ">=14.17.1"
   },
   "type": "module",
-  "source": "src/lib.js",
+  "source": "src/s-forms-geo-components.ts",
+  "main": "dist/s-forms-geo-components.js",
   "exports": "./dist/s-forms-geo-components.modern.js",
   "module": "./dist/s-forms-geo-components.js",
   "unpkg": "./dist/s-forms-geo-components.umd.js",
-  "targets": {
-    "browser": {
-      "distDir": "dist",
-      "outputFormat": "commonjs",
-      "optimize": false
-    }
-  },
   "files": [
-    "src/",
-    "dist/"
+    "dist/*.*",
+    "dist/**/*"
   ],
   "dependencies": {
     "@types/leaflet": "^1.7.11",
-    "intelligent-tree-select": "~0.8.3",
     "axios": "^1.1.3",
+    "intelligent-tree-select": "~0.8.3",
     "leaflet": "^1.8.0",
     "react-leaflet": "^3.2.5",
     "react-leaflet-custom-control": "^1.2.2"
