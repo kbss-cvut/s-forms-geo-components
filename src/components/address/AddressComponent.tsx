@@ -49,6 +49,10 @@ export default class AddressComponent extends Question {
             return;
 
         for (const subquestion of subquestions) {
+            if (this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT) {
+                subquestion[SConstants.HAS_ANSWER][0][SConstants.HAS_DATA_VALUE] = {"@value": null};
+                continue
+            }
             if (!this.props.isGeneralLocationPicked && subquestion[Constants.HAS_MAIN_PROCESSING_ASPECT_TARGET]["@id"] === Constants.ADDRESS_TEXT) {
                 subquestion[SConstants.LAYOUT_CLASS] = [];
                 continue;
@@ -69,6 +73,11 @@ export default class AddressComponent extends Question {
             this._resetValuesToSubQuestionsRecursively();
             return;
         }
+
+        /*if (!this.props.addressPlace && !this.state.code) {
+            this._resetValuesToSubQuestionsRecursively();
+            return;
+        }*/
 
         // Data mapping from component to questions;
         if (this.props.addressPlace) {

@@ -134,15 +134,18 @@ export default class CoordinateComponent extends Question {
         return (
             <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})} centered>
                 <Modal.Header>
-                    <Modal.Title>Modifying selected address place</Modal.Title>
+                    {/*<Modal.Title>Modifying selected address place</Modal.Title>*/}
+                    <Modal.Title>Úprava zvoleného adresního místa</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>With modifying current address you will unselect current address place. Are you sure?</Modal.Body>
+                {/*<Modal.Body>With modifying current address you will unselect current address place. Are you sure?</Modal.Body>*/}
+                <Modal.Body>Úpravou hodnot znehodnotíte vybrané adresní místo a tím budou hodnoty adresního místa vynulovány. Jste si jisti?</Modal.Body>
+
                 <Modal.Footer className={"address-place-popup-footer"}>
                     <Button variant="warning" onClick={(e) => this._handleModifyAddressPlaceButtonClick(e)}>
-                        Modify and unselect
+                        Odvybrat adresní místo
                     </Button>
                     <Button variant="secondary" onClick={this._handleKeepAddressPlaceButtonClick}>
-                        Keep current address place
+                        Ponechat vybrané adresní místo
                     </Button>
                 </Modal.Footer>
             </Modal>

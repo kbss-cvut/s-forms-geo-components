@@ -44,8 +44,8 @@ export function getMarkerPopupHTML(markerCoords: LatLng) {
   htmlString += markerCoords.lat.toFixed(7) + " z. š." + "<br/>";
   htmlString += markerCoords.lng.toFixed(7) + " z. d." + "<br/>";
 
-  htmlString += "<button id=" + Constants.LOCATION_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary popup-btn\">Select location</button> <br/>";
-  htmlString += "<button id=" + Constants.LOCATION_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary popup-btn\">Close</button>";
+  htmlString += "<button id=" + Constants.LOCATION_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary popup-btn\">Vybrat souřadnice</button> <br/>";
+  htmlString += "<button id=" + Constants.LOCATION_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary popup-btn\">Zavřít</button>";
 
   return htmlString;
 }

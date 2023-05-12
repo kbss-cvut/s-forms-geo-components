@@ -13,7 +13,7 @@ export default class LocateIcon extends React.Component<Props> {
     getTooltip = (props: any) => {
         return (
             <Tooltip id="button-tooltip" {...props}>
-                Find my location
+                Najít mou polohu
             </Tooltip>
         )
     }

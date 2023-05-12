@@ -282,7 +282,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                         this.state.pickedLocationCoords &&
                         <Control position='bottomleft'>
                             <Button size='sm' className={'btn-custom'}
-                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect location</Button>
+                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Vynulovat zvolené souřadnice</Button>
                         </Control>
                     }
 
@@ -290,8 +290,7 @@ export default class MapComponent extends React.Component<Props, MapState> {
                         this.state.pickedAddressPlace &&
                         <Control position='bottomleft'>
                             <Button size='sm' className={'btn-custom'}
-                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect address
-                                place</Button>
+                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Vynulovat adresní místo</Button>
                         </Control>
                     }
 
