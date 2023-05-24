@@ -68,28 +68,14 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     componentDidMount() {
-        const mapEl = document.querySelector("#map");
-        // Clickable section label (Geometrie)
-        let sectionParent;
-
-        if (mapEl) {
-            const cardParent = mapEl.closest("div.mb-3.card");
-            sectionParent = cardParent ? cardParent.firstChild : null;
-        }
-
-        if (sectionParent) {
-            sectionParent.addEventListener('click', (e) => {
-                e.preventDefault();
-                setTimeout(
-                    () => {
-                        if (this.mapRef.current) {
-                            this.mapRef.current.invalidateSize();
-                            this.mapRef.current.setView(new LatLng(Constants.DEFAULT_COORDINATES[0], Constants.DEFAULT_COORDINATES[1]));
-                        }
-                    }, 20
-                );
-            });
-        }
+        setTimeout(
+            () => {
+                if (this.mapRef.current) {
+                    this.mapRef.current.invalidateSize();
+                    this.mapRef.current.setView(new LatLng(Constants.DEFAULT_COORDINATES[0], Constants.DEFAULT_COORDINATES[1]));
+                }
+            }, 20
+        );
     }
 
     onLocateIconClicked = () => {
