@@ -2,9 +2,10 @@ import React from "react";
 import L, {LatLng} from 'leaflet';
 import AddressPlace from "../../model/AddressPlace";
 import { Marker, Tooltip } from "react-leaflet";
+import geoFillSelected from "../../img/geo-fill-selected.svg";
 
 const iconPickedAddressPlace = L.icon({
-    iconUrl: require("../../img/geo-fill-selected.svg"),
+    iconUrl: geoFillSelected,
     iconSize: [40, 52],
     iconAnchor: [24, 52],
     popupAnchor: [0,-40]
