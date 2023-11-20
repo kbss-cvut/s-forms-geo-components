@@ -5,16 +5,19 @@ import inspire_address_api from "../../api/inspire_address_api";
 import AddressPlace from "../../model/AddressPlace";
 import AddressPlaceParser from "../../utils/AddressPlaceParser";
 import {Button} from "react-bootstrap";
+import geoFill from "../../img/geo-fill.svg";
+import geoFillSelected from "../../img/geo-fill-selected.svg";
+
 
 const iconAddressPlace = L.icon({
-    iconUrl: require("../../img/geo-fill.svg"),
+    iconUrl: geoFill,
     iconSize: [32, 44],
     iconAnchor: [16, 44],
     popupAnchor: [0,-40]
 });
 
 const iconPickedAddressPlace = L.icon({
-    iconUrl: require("../../img/geo-fill-selected.svg"),
+    iconUrl: geoFillSelected,
     iconSize: [40, 52],
     iconAnchor: [24, 52],
     popupAnchor: [0,-40]
