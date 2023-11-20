@@ -85,11 +85,13 @@ class _GeoComponent extends Question {
     }
 
     onMarkerLocationPicked = (latitude: number, longitude: number) => {
+        this.onAddressPlaceReset()
         this.setState({
             latitude: latitude.toFixed(7),
             longitude: longitude.toFixed(7),
             addressPlace: null
         });
+
         this.mapComponentRef.current?.onMarkerLocationPicked(latitude, longitude);
     }
 
@@ -138,8 +140,8 @@ class _GeoComponent extends Question {
         this.mapComponentRef.current?.onAddressPlaceReset();
     }
 
-    onAddressPlaceReset = (e) => {
-        e.stopPropagation();
+    onAddressPlaceReset = (e = null) => {
+        e?.stopPropagation();
 
         this.setState({
             latitude: null,

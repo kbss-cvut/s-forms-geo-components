@@ -2,10 +2,12 @@
 import L, {LatLng} from "leaflet";
 import React, {useState} from "react";
 import {Marker, Popup, Tooltip, useMap} from "react-leaflet";
+import selectedLocation from "../../img/selected-location-icon.svg";
+
 
 const customIcon = new L.Icon({
-    iconUrl: require('../../img/selected-location-icon.svg'),
-    iconRetinaUrl: require('../../img/selected-location-icon.svg'),
+    iconUrl: selectedLocation,
+    iconRetinaUrl: selectedLocation,
     iconSize: [38, 50],
     iconAnchor: [22, 50],
     popupAnchor: [0, -44]

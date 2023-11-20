@@ -44,6 +44,12 @@ module.exports = {
                 path.resolve(__dirname, '../node_modules/react-leaflet')],
 
         });
+
+        config.module.rules.push({
+            test: /\.mjs$/,
+            include: /node_modules/,
+            type: 'javascript/auto'
+        });
         // Return the altered config
         return config;
     },

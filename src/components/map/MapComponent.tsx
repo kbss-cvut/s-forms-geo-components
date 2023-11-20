@@ -17,6 +17,7 @@ import {Button} from "react-bootstrap";
 import SelectedAddressPlaceMarker from "../address/SelectedAddressPlaceMarker";
 import GeneralLocationMarker, {getMarkerPopupHTML} from "./GeneralLocationMarker";
 import SelectedGeneralLocationMarker from "./SelectedGeneralLocationMarker";
+import ResetFormButton from "../ResetFormButton";
 
 /**
  * Default icon loaded from Leaflet. Must be here in order to render default leaflet marker icon.
@@ -36,7 +37,7 @@ const defaultPosition = Constants.DEFAULT_COORDINATES;
 interface Props {
     onAddressPlacePicked: (addressPlace: AddressPlace) => void,
     onMarkerLocationPicked: (latitude: number, longitude: number) => void,
-    onAddressPlaceReset: () => void,
+    onAddressPlaceReset: (event: any) => void,
     userInputCoords: number[]
 }
 
@@ -69,28 +70,16 @@ export default class MapComponent extends React.Component<Props, MapState> {
     }
 
     componentDidMount() {
-        const mapEl = document.querySelector("#map");
-        // Clickable section label (Geometrie)
-        let sectionParent;
-
-        if (mapEl) {
-            const cardParent = mapEl.closest("div.mb-3.card");
-            sectionParent = cardParent ? cardParent.firstChild : null;
-        }
-
-        if (sectionParent) {
-            sectionParent.addEventListener('click', (e) => {
-                e.preventDefault();
-                setTimeout(
-                    () => {
-                        if (this.mapRef.current) {
-                            this.mapRef.current.invalidateSize();
-                            this.mapRef.current.setView(new LatLng(Constants.DEFAULT_COORDINATES[0], Constants.DEFAULT_COORDINATES[1]));
-                        }
-                    }, 20
-                );
-            });
-        }
+        setTimeout(
+            () => {
+                if (this.mapRef.current) {
+                    this.mapRef.current.invalidateSize();
+                    this.mapRef.current.setView(new LatLng(Constants.DEFAULT_COORDINATES[0], Constants.DEFAULT_COORDINATES[1]));
+                    this.mapRef.current.addEventListener("zoomend", this.handleMapInteractionEnd);
+                    this.mapRef.current.addEventListener("moveend", this.handleMapInteractionEnd);
+                }
+            }, 20
+        );
     }
 
     onLocateIconClicked = () => {
@@ -227,11 +216,9 @@ export default class MapComponent extends React.Component<Props, MapState> {
                               center={new LatLng(Constants.DEFAULT_COORDINATES[0], Constants.DEFAULT_COORDINATES[1])}
                               zoom={7}
                               scrollWheelZoom={true}
-                              whenCreated={mapInstance => {
-                                  this.mapRef.current = mapInstance;
-                                  this.mapRef.current.addEventListener("zoomend", this.handleMapInteractionEnd);
-                                  this.mapRef.current.addEventListener("moveend", this.handleMapInteractionEnd);
-                              }}>
+                              ref={this.mapRef}
+                >
+
                     <TileLayer
                         attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
                         url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
@@ -281,19 +268,12 @@ export default class MapComponent extends React.Component<Props, MapState> {
 
                     {
                         this.state.pickedLocationCoords &&
-                        <Control position='bottomleft'>
-                            <Button size='sm' className={'btn-custom'}
-                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect location</Button>
-                        </Control>
+                        <ResetFormButton test={this.props.onAddressPlaceReset} text={"Vynulovat zeměpisné souřadnice"}/>
                     }
 
                     {
                         this.state.pickedAddressPlace &&
-                        <Control position='bottomleft'>
-                            <Button size='sm' className={'btn-custom'}
-                                    onClick={(e) => this.props.onAddressPlaceReset(e)}>Unselect address
-                                place</Button>
-                        </Control>
+                        <ResetFormButton test={this.props.onAddressPlaceReset} text={"Vynulovat adresní místo"}/>
                     }
 
                 </MapContainer>

@@ -84,10 +84,10 @@ const Template: ComponentStory<typeof SForms> = (args) => {
   );
 };
 
-export const Form1 = Template.bind({});
-Form1.args = {
-  options: options,
-};
+// export const Form1 = Template.bind({});
+// Form1.args = {
+//   options: options,
+// };
 export const TouristDestination1 = Template.bind({});
 TouristDestination1.args = {
   options: options,

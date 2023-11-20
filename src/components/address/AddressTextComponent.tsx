@@ -188,20 +188,23 @@ export default class AddressTextComponent extends Question {
 
     _renderModifyAddressTextPopup() {
         return (
-          <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})} centered>
-              <Modal.Header>
-                  <Modal.Title>Modifying selected address place</Modal.Title>
-              </Modal.Header>
-              <Modal.Body>With modifying current address you will unselect current address place. Are you sure?</Modal.Body>
-              <Modal.Footer className={"address-place-popup-footer"}>
-                  <Button variant="warning" onClick={(e) => this._handleModifyAddressPlaceButtonClick(e)}>
-                      Modify and unselect
-                  </Button>
-                  <Button variant="secondary" onClick={this._handleKeepAddressPlaceButtonClick}>
-                      Keep current address place
-                  </Button>
-              </Modal.Footer>
-          </Modal>
+            <Modal show={this.state.showPopup} onHide={() => this.setState({showPopup:false})} centered>
+                <Modal.Header>
+                    {/*<Modal.Title>Modifying selected address place</Modal.Title>*/}
+                    <Modal.Title>Úprava zvoleného adresního místa</Modal.Title>
+                </Modal.Header>
+                {/*<Modal.Body>With modifying current address you will unselect current address place. Are you sure?</Modal.Body>*/}
+                <Modal.Body>Úpravou hodnot znehodnotíte vybrané adresní místo a tím budou hodnoty adresního místa vynulovány. Jste si jisti?</Modal.Body>
+
+                <Modal.Footer className={"address-place-popup-footer"}>
+                    <Button variant="warning" onClick={(e) => this._handleModifyAddressPlaceButtonClick(e)}>
+                        Odvybrat adresní místo
+                    </Button>
+                    <Button variant="secondary" onClick={this._handleKeepAddressPlaceButtonClick}>
+                        Ponechat vybrané adresní místo
+                    </Button>
+                </Modal.Footer>
+            </Modal>
         );
     }
 }

@@ -64,8 +64,8 @@ export default class AddressPlace {
         html += this.city + "<br/>\n";
         html += this.postalCode + "<br/>\n";
 
-        html += "<button id=" + Constants.ADDRESS_PLACE_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary popup-btn\">Select address place</button> <br/>";
-        html += "<button id=" + Constants.ADDRESS_PLACE_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary popup-btn\">Close</button>";
+        html += "<button id=" + Constants.ADDRESS_PLACE_PICK_BUTTON + " type=\"button\" class=\"btn btn-primary popup-btn\">Vybrat adresní místo</button> <br/>";
+        html += "<button id=" + Constants.ADDRESS_PLACE_CLOSE_BUTTON + " type=\"button\" class=\"btn btn-secondary popup-btn\">Zavřít</button>";
 
         return html;
     }
