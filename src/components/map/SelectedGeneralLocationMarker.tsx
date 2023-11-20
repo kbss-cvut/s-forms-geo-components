@@ -6,8 +6,8 @@ import selectedLocation from "../../img/selected-location-icon.svg";
 
 
 const customIcon = new L.Icon({
-    iconUrl: selectedLocation,
-    iconRetinaUrl: selectedLocation,
+    iconUrl: "../../img/selected-location-icon.svg",
+    iconRetinaUrl: "../../img/selected-location-icon.svg",
     iconSize: [38, 50],
     iconAnchor: [22, 50],
     popupAnchor: [0, -44]
