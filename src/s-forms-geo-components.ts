@@ -11,6 +11,7 @@ import GeneralLocationMarker from "./components/map/GeneralLocationMarker";
 import MapComponent from "./components/map/MapComponent";
 import SelectedGeneralLocationMarker from "./components/map/SelectedGeneralLocationMarker";
 import GeoComponent from "./components/GeoComponent";
+import "./styles/components.css";
 
 export default GeoComponents;
 
